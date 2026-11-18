@@ -1,0 +1,51 @@
+{
+  "network_name": "AuroraHealth_Clinic_Agent_Network",
+  "version": "1.0.0",
+  "generated_by": "AgenticForge Studio v1.0",
+  "runtime_spec": "cognizant-nsdeploy-browser",
+  "llm_router": {
+    "provider": "otari",
+    "model": "alibaba/qwen-3.5-35b-a3b",
+    "endpoint": "https://api.otari.mozilla.org/v1/chat/completions",
+    "byok_supported": true
+  },
+  "safety_policy": {
+    "human_in_the_loop_threshold": 0.65,
+    "enforced_tools": [
+      "exec_submit_payment_booking",
+      "exec_delete_appointment"
+    ]
+  },
+  "entry_agent": "FrontDesk_Coordinator",
+  "agents": [
+    {
+      "name": "FrontDesk_Coordinator",
+      "role": "Primary entry coordinator for Medical Clinic Booking. Receives user intent and Grounded DOM State Snapshot.",
+      "tools": [
+        "getPageState"
+      ],
+      "downstream_agents": [
+        "State_Form_Specialist",
+        "Critical_Action_Specialist"
+      ]
+    },
+    {
+      "name": "State_Form_Specialist",
+      "role": "Reads and updates non-destructive form inputs, selectors, and queries.",
+      "tools": [
+        "set_patient_name_input",
+        "set_specialty_select",
+        "set_visit_date_input",
+        "exec_query_slots"
+      ]
+    },
+    {
+      "name": "Critical_Action_Specialist",
+      "role": "Handles high-risk state mutations with mandatory Human-in-the-Loop browser confirmation.",
+      "tools": [
+        "exec_submit_payment_booking",
+        "exec_delete_appointment"
+      ]
+    }
+  ]
+}

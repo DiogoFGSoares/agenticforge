@@ -1,0 +1,1125 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AgenticForge — Meta-IDE &amp; Scaffolder for the Open Agentic Web</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <style>
+    :root {
+      --bg: #0b0f17;
+      --surface: #111827;
+      --surface-elevated: #1a2333;
+      --surface-code: #080b11;
+      --border: #26334d;
+      --border-subtle: #1e293b;
+      --ink: #f1f5f9;
+      --muted: #94a3b8;
+      --brand: #38bdf8;
+      --brand-ink: #06131f;
+      --accent: #f97316;
+      --accent-glow: rgba(249, 115, 22, 0.2);
+      --success: #22c55e;
+      --warning: #eab308;
+      --danger: #ef4444;
+      --purple: #a855f7;
+      --radius: 10px;
+      --radius-sm: 6px;
+      --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.4);
+      --space-1: 4px;
+      --space-2: 8px;
+      --space-3: 12px;
+      --space-4: 16px;
+      --space-6: 24px;
+      --font: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --mono: 'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: var(--font);
+      color: var(--ink);
+      background: var(--bg);
+      line-height: 1.5;
+      font-size: 13px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-4);
+      padding: var(--space-3) var(--space-4);
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+    }
+
+    .brand-logo {
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, var(--accent), #fb923c);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 15px;
+      color: #fff;
+      box-shadow: 0 0 14px var(--accent-glow);
+      flex-shrink: 0;
+    }
+
+    .brand-title {
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: rgba(56, 189, 248, 0.14);
+      color: var(--brand);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+    }
+
+    .badge-orange {
+      background: rgba(249, 115, 22, 0.14);
+      color: #fb923c;
+      border-color: rgba(249, 115, 22, 0.35);
+    }
+
+    .badge-success {
+      background: rgba(34, 197, 94, 0.14);
+      color: #4ade80;
+      border-color: rgba(34, 197, 94, 0.35);
+    }
+
+    .badge-danger {
+      background: rgba(239, 68, 68, 0.16);
+      color: #f87171;
+      border-color: rgba(239, 68, 68, 0.35);
+    }
+
+    .brand-subtitle {
+      font-size: 11.5px;
+      color: var(--muted);
+    }
+
+    .pipeline-steps {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      flex-wrap: wrap;
+    }
+
+    .step-pill {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 10px;
+      border-radius: var(--radius-sm);
+      background: var(--surface-elevated);
+      border: 1px solid var(--border-subtle);
+      color: var(--muted);
+      font-size: 11.5px;
+      font-weight: 500;
+    }
+
+    .step-pill.active {
+      border-color: var(--brand);
+      color: var(--ink);
+      background: rgba(56, 189, 248, 0.1);
+    }
+
+    .step-pill.done {
+      border-color: rgba(34, 197, 94, 0.4);
+      color: #86efac;
+    }
+
+    .step-num {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.08);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 700;
+    }
+
+    .topbar-actions {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      font: inherit;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 7px 12px;
+      border-radius: var(--radius-sm);
+      border: 1px solid transparent;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+      text-decoration: none;
+    }
+
+    .btn-primary { background: var(--brand); color: var(--brand-ink); }
+    .btn-primary:hover { background: #7dd3fc; }
+    .btn-accent { background: var(--accent); color: #fff; }
+    .btn-accent:hover { background: #fb923c; }
+    .btn-secondary { background: var(--surface-elevated); color: var(--ink); border-color: var(--border); }
+    .btn-secondary:hover { background: #243047; border-color: #3b4f73; }
+    .btn-sm { padding: 4px 9px; font-size: 11px; }
+
+    .ide-workspace {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--space-3);
+      padding: var(--space-3);
+      flex: 1;
+      max-width: 1800px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    @media (min-width: 1100px) {
+      .ide-workspace {
+        grid-template-columns: 1.05fr 1.15fr 1fr;
+        align-items: stretch;
+      }
+    }
+
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    .right-column {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+    }
+
+    .panel-header {
+      padding: 10px 14px;
+      background: var(--surface-elevated);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-2);
+      flex-wrap: wrap;
+    }
+
+    .panel-title {
+      font-size: 12.5px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0;
+    }
+
+    .panel-body {
+      padding: var(--space-3);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    .template-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-2);
+      flex-wrap: wrap;
+    }
+
+    .template-chips {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .chip-btn {
+      font: inherit;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 6px;
+      background: var(--surface-code);
+      color: var(--muted);
+      border: 1px solid var(--border);
+      cursor: pointer;
+    }
+
+    .chip-btn.active, .chip-btn:hover {
+      color: var(--ink);
+      border-color: var(--brand);
+      background: rgba(56, 189, 248, 0.12);
+    }
+
+    .subtabs {
+      display: flex;
+      gap: 4px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 6px;
+      flex-wrap: wrap;
+    }
+
+    .subtab {
+      font: inherit;
+      font-size: 11.5px;
+      font-weight: 600;
+      padding: 5px 10px;
+      border-radius: 6px;
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid transparent;
+      cursor: pointer;
+    }
+
+    .subtab.active {
+      background: var(--surface-elevated);
+      color: var(--brand);
+      border-color: var(--border);
+    }
+
+    .code-area {
+      width: 100%;
+      min-height: 155px;
+      background: var(--surface-code);
+      color: #e2e8f0;
+      font-family: var(--mono);
+      font-size: 11.5px;
+      line-height: 1.45;
+      padding: 10px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      resize: vertical;
+    }
+
+    .target-preview-container {
+      background: #f8fafc;
+      color: #0f172a;
+      border-radius: var(--radius-sm);
+      border: 2px solid var(--border);
+      padding: 12px;
+      min-height: 185px;
+      max-height: 255px;
+      overflow-y: auto;
+    }
+
+    .target-preview-container.highlight-nodes [data-af-node] {
+      outline: 2px dashed #f97316 !important;
+      outline-offset: 2px;
+    }
+
+    .target-preview-container h3 { margin: 0 0 6px 0; font-size: 15px; color: #0f172a; }
+    .target-preview-container p { margin: 0 0 8px 0; font-size: 12px; color: #475569; }
+    .target-preview-container label { display: block; font-size: 11px; font-weight: 600; color: #334155; margin-bottom: 3px; }
+    .target-preview-container input, .target-preview-container select, .target-preview-container textarea {
+      width: 100%; padding: 6px 8px; font-size: 12px; border: 1px solid #cbd5e1; border-radius: 5px; margin-bottom: 8px; background: #fff; color: #0f172a;
+    }
+    .target-preview-container button {
+      padding: 6px 12px; font-size: 12px; font-weight: 600; border-radius: 5px; border: none; cursor: pointer; background: #2563eb; color: #fff; margin-right: 6px; margin-top: 4px;
+    }
+    .target-preview-container button.danger-btn { background: #dc2626; }
+    .target-preview-container .preview-state-banner {
+      margin-top: 8px; padding: 6px 10px; background: #e0f2fe; border-left: 3px solid #0284c7; font-size: 11.5px; color: #0369a1; border-radius: 4px;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--surface-code);
+      max-height: 230px;
+      overflow-y: auto;
+    }
+
+    table.cap-table { width: 100%; border-collapse: collapse; font-size: 11.5px; }
+    table.cap-table th {
+      text-align: left; padding: 7px 9px; background: var(--surface-elevated); color: var(--muted); font-weight: 600; border-bottom: 1px solid var(--border); position: sticky; top: 0;
+    }
+    table.cap-table td { padding: 6px 9px; border-bottom: 1px solid var(--border-subtle); vertical-align: middle; }
+    table.cap-table tr:hover td { background: rgba(56, 189, 248, 0.06); }
+    .num-col { text-align: right; font-family: var(--mono); }
+    .selector-code { font-family: var(--mono); font-size: 11px; color: #7dd3fc; background: rgba(56, 189, 248, 0.1); padding: 2px 5px; border-radius: 4px; }
+
+    .formula-box {
+      padding: 8px 10px;
+      background: var(--surface-code);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .topology-box {
+      background: var(--surface-code);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 220px;
+    }
+
+    .topology-svg { width: 100%; height: 215px; display: block; }
+
+    .chat-log {
+      background: var(--surface-code);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 10px;
+      height: 170px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .msg { padding: 7px 10px; border-radius: 7px; font-size: 12px; max-width: 92%; line-height: 1.4; }
+    .msg-user { align-self: flex-end; background: rgba(56, 189, 248, 0.18); border: 1px solid rgba(56, 189, 248, 0.35); color: var(--ink); }
+    .msg-agent { align-self: flex-start; background: var(--surface-elevated); border: 1px solid var(--border); color: var(--ink); }
+    .msg-tool { align-self: flex-start; background: rgba(168, 85, 247, 0.12); border: 1px solid rgba(168, 85, 247, 0.35); color: #e9d5ff; font-family: var(--mono); font-size: 11px; }
+    .msg-sender { font-size: 10px; font-weight: 700; text-transform: uppercase; color: var(--brand); margin-bottom: 2px; display: block; }
+
+    .chat-input-row { display: flex; gap: 6px; }
+    .chat-input { flex: 1; background: var(--surface-code); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 7px 10px; color: var(--ink); font: inherit; font-size: 12px; }
+
+    .modal-backdrop {
+      position: fixed; inset: 0; background: rgba(5, 8, 15, 0.78); backdrop-filter: blur(4px); display: none; align-items: center; justify-content: center; z-index: 1000; padding: var(--space-4);
+    }
+    .modal-backdrop.open { display: flex; }
+    .modal-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); max-width: 540px; width: 100%; box-shadow: var(--shadow); overflow: hidden; }
+    .modal-header { padding: 14px 18px; background: var(--surface-elevated); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+    .modal-body { padding: 16px 18px; display: flex; flex-direction: column; gap: 12px; }
+    .modal-footer { padding: 12px 18px; background: var(--surface-elevated); border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 8px; }
+
+    .form-field { display: flex; flex-direction: column; gap: 4px; }
+    .form-field label { font-size: 11.5px; font-weight: 600; color: var(--muted); }
+    .form-field input, .form-field select { background: var(--surface-code); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 8px 10px; color: var(--ink); font: inherit; font-size: 12px; }
+
+    .ide-footer {
+      padding: 8px 16px; background: var(--surface); border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; font-size: 11px; color: var(--muted); flex-wrap: wrap; gap: 8px;
+    }
+    .ide-footer a { color: var(--brand); text-decoration: none; }
+  </style>
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="brand-group">
+      <div class="brand-logo" aria-hidden="true">AF</div>
+      <div>
+        <div class="brand-title">
+          AgenticForge
+          <span class="badge">Open Agentic Web IDE</span>
+          <span class="badge badge-orange" id="llmModeBadge">Runtime: Browser + Mozilla Otari Ready</span>
+        </div>
+        <div class="brand-subtitle">Turn any static HTML page into an Open Agentic Website (.network.json + site.js + Auto-HITL)</div>
+      </div>
+    </div>
+
+    <div class="pipeline-steps">
+      <div class="step-pill done"><span class="step-num">1</span> DOM Inspection</div>
+      <div class="step-pill done"><span class="step-num">2</span> .network.json Blueprint</div>
+      <div class="step-pill done"><span class="step-num">3</span> Safe site.js + HITL</div>
+      <div class="step-pill active"><span class="step-num">4</span> Live Sandbox</div>
+    </div>
+
+    <div class="topbar-actions">
+      <button type="button" class="btn btn-secondary" id="openLlmSettingsBtn">⚙️ LLM Settings (Otari / BYOK)</button>
+      <button type="button" class="btn btn-accent" id="exportBundleBtn">📦 Export Agentic Bundle (.zip)</button>
+    </div>
+  </header>
+
+  <main class="ide-workspace">
+    <!-- PANEL 1 -->
+    <section class="panel">
+      <div class="panel-header">
+        <h2 class="panel-title">🔍 1. Target DOM Inspector &amp; Capability Scorer</h2>
+        <button type="button" class="btn btn-primary btn-sm" id="scanDomBtn">⚡ Forge &amp; Scan DOM</button>
+      </div>
+      <div class="panel-body">
+        <div class="template-bar">
+          <span style="font-size:11.5px; color:var(--muted); font-weight:600;">Sample Templates:</span>
+          <div class="template-chips">
+            <button type="button" class="chip-btn active" data-template="clinic">🏥 Medical Clinic</button>
+            <button type="button" class="chip-btn" data-template="store">💻 Tech Store</button>
+            <button type="button" class="chip-btn" data-template="bounty">🛡️ Security Triage</button>
+          </div>
+        </div>
+
+        <div class="subtabs">
+          <button type="button" class="subtab active" data-lefttab="preview">Live Target Preview</button>
+          <button type="button" class="subtab" data-lefttab="html">Raw Target HTML Source</button>
+          <label style="margin-left:auto; display:inline-flex; align-items:center; gap:5px; font-size:11px; color:var(--muted); cursor:pointer;">
+            <input type="checkbox" id="toggleHighlightNodes" checked> Highlight DOM Nodes
+          </label>
+        </div>
+
+        <div id="targetPreviewWrap" class="target-preview-container highlight-nodes"></div>
+        <textarea id="rawHtmlInput" class="code-area" style="display:none;" spellcheck="false"></textarea>
+
+        <div class="formula-box">
+          <span>Actionability: <strong>A(eᵢ) = w_tag·I + w_sem·S + w_bind·B</strong></span>
+          <span>HITL Guard Threshold: <strong>R(eᵢ) ≥ τ_HITL (0.65)</strong></span>
+        </div>
+
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <span style="font-size:11.5px; font-weight:700;">Extracted DOM Capability Map (<span id="capCountLabel">0</span> tools)</span>
+          <span style="font-size:11px; color:var(--muted);">Click any row to test tool in sandbox</span>
+        </div>
+
+        <div class="table-wrap">
+          <table class="cap-table">
+            <thead>
+              <tr>
+                <th>Tool / Capability</th>
+                <th>Selector</th>
+                <th>Op</th>
+                <th class="num-col">A(eᵢ)</th>
+                <th class="num-col">R(eᵢ)</th>
+                <th>Safety Guard</th>
+              </tr>
+            </thead>
+            <tbody id="capabilitiesTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- PANEL 2 -->
+    <section class="panel">
+      <div class="panel-header">
+        <h2 class="panel-title">🕸️ 2. Multi-Agent Topology &amp; Generated Blueprint</h2>
+        <div style="display:flex; gap:6px;">
+          <span class="badge badge-success">nsdeploy Spec Compliant</span>
+          <button type="button" class="btn btn-secondary btn-sm" id="copyCodeBtn">📋 Copy Active File</button>
+        </div>
+      </div>
+      <div class="panel-body">
+        <div class="topology-box">
+          <div style="width:100%; display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+            <span style="font-size:11px; font-weight:600; color:var(--muted);" id="topologyTitleLabel">Generated Target Hierarchy</span>
+            <div style="display:flex; gap:6px;">
+              <button type="button" class="chip-btn active" id="viewTargetGraphBtn">Target Agent Graph</button>
+              <button type="button" class="chip-btn" id="viewStudioGraphBtn">AgenticForge 4-Agent Graph</button>
+            </div>
+          </div>
+          <svg id="topologySvg" class="topology-svg" viewBox="0 0 620 210"></svg>
+        </div>
+
+        <div class="subtabs">
+          <button type="button" class="subtab active" data-codetab="networkJson">target_assistant.network.json</button>
+          <button type="button" class="subtab" data-codetab="siteJs">target_site.js (Hooks + HITL)</button>
+          <button type="button" class="subtab" data-codetab="studioNetwork">devstudio_assistant.network.json</button>
+        </div>
+
+        <textarea id="generatedCodeViewer" class="code-area" style="flex:1; min-height:230px;" readonly spellcheck="false"></textarea>
+      </div>
+    </section>
+
+    <!-- RIGHT COLUMN: PANELS 3 & 4 -->
+    <div class="right-column">
+      <section class="panel" style="flex:1;">
+        <div class="panel-header">
+          <h2 class="panel-title">🧪 3. Live Target Sandbox Simulator</h2>
+          <span class="badge" id="sandboxActiveSiteBadge">Target: Medical Clinic</span>
+        </div>
+        <div class="panel-body">
+          <div style="display:flex; gap:6px; flex-wrap:wrap;" id="sandboxQuickPrompts"></div>
+          <div class="chat-log" id="sandboxChatLog"></div>
+          <form class="chat-input-row" id="sandboxForm">
+            <input type="text" class="chat-input" id="sandboxInput" placeholder="Instruct the generated target site assistant..." required>
+            <button type="submit" class="btn btn-primary">Run</button>
+          </form>
+        </div>
+      </section>
+
+      <section class="panel" style="flex:1;">
+        <div class="panel-header">
+          <h2 class="panel-title">🤖 4. AgenticForge Studio Assistant</h2>
+          <span class="badge badge-orange">4 Studio Agents Active</span>
+        </div>
+        <div class="panel-body">
+          <div style="display:flex; gap:6px; flex-wrap:wrap;">
+            <button type="button" class="chip-btn studio-prompt-btn" data-prompt="Audit DOM risk scores and explain which tools require HITL">Audit DOM Risk Scores</button>
+            <button type="button" class="chip-btn studio-prompt-btn" data-prompt="Switch to Tech Store template and generate blueprint">Load Tech Store</button>
+            <button type="button" class="chip-btn studio-prompt-btn" data-prompt="Export the agentified bundle for deployment">Export Bundle</button>
+          </div>
+          <div class="chat-log" id="studioChatLog"></div>
+          <form class="chat-input-row" id="studioForm">
+            <input type="text" class="chat-input" id="studioInput" placeholder="Ask Architect_Coordinator to scan DOM or export..." required>
+            <button type="submit" class="btn btn-accent">Ask Studio</button>
+          </form>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="ide-footer">
+    <div><strong>AgenticForge Studio</strong> — Built for the Open Agentic Web Challenge (Zero-Backend Browser Runtime)</div>
+    <div style="display:flex; gap:14px;">
+      <a href="https://github.com/cognizant-ai-labs/agentic-web" target="_blank" rel="noopener">cognizant-ai-labs/agentic-web</a>
+      <a href="https://cognizant-agenticweb.devpost.com/" target="_blank" rel="noopener">Open Agentic Web Challenge</a>
+    </div>
+  </footer>
+
+  <!-- HITL MODAL -->
+  <div class="modal-backdrop" id="hitlModalBackdrop">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span class="badge badge-danger">🛡️ Human-in-the-Loop Guard</span>
+          <strong style="font-size:13.5px;">Explicit User Approval Required</strong>
+        </div>
+      </div>
+      <div class="modal-body">
+        <p style="margin:0; color:var(--muted); font-size:12px;">
+          AgenticForge's runtime interceptor halted a high-risk tool execution because its Mutation Risk Score exceeded <code>τ_HITL = 0.65</code>.
+        </p>
+        <div class="formula-box" style="flex-direction:column; align-items:flex-start; gap:4px; color:var(--ink);">
+          <div><strong>Intercepted Tool:</strong> <code id="hitlToolName" style="color:var(--brand);">submit_form</code></div>
+          <div><strong>Origin Agent:</strong> <span id="hitlAgentName">Critical_Action_Specialist</span></div>
+          <div><strong>Mutation Risk Score R(eᵢ):</strong> <span id="hitlRiskScore" class="badge badge-danger">0.88</span></div>
+          <div><strong>Proposed Payload / DOM Mutation:</strong></div>
+          <pre id="hitlPayloadPre" style="margin:4px 0 0 0; width:100%; background:#05070b; padding:8px; border-radius:4px; overflow-x:auto; color:#86efac; font-size:11px;"></pre>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" id="hitlRejectBtn">✖ Cancel Action</button>
+        <button type="button" class="btn btn-accent" id="hitlApproveBtn">✔ Approve &amp; Execute in Browser</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SETTINGS MODAL -->
+  <div class="modal-backdrop" id="settingsModalBackdrop">
+    <div class="modal-card">
+      <div class="modal-header">
+        <strong style="font-size:13.5px;">⚙️ Client-Side LLM Router Settings (BYOK)</strong>
+        <button type="button" class="btn btn-secondary btn-sm" id="closeSettingsModalBtn">Close</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-field">
+          <label for="llmProviderSelect">LLM Provider / Gateway</label>
+          <select id="llmProviderSelect">
+            <option value="otari">Mozilla Otari Gateway (Open-Source LLM Router)</option>
+            <option value="openai">OpenAI Compatible CORS Endpoint</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label for="llmEndpointInput">Inference Endpoint URL (CORS)</label>
+          <input type="url" id="llmEndpointInput" value="https://api.otari.mozilla.org/v1/chat/completions">
+        </div>
+        <div class="form-field">
+          <label for="llmModelInput">Recommended Model Name</label>
+          <input type="text" id="llmModelInput" value="alibaba/qwen-3.5-35b-a3b">
+        </div>
+        <div class="form-field">
+          <label for="llmApiKeyInput">API Key (Stored in browser memory only)</label>
+          <input type="password" id="llmApiKeyInput" placeholder="Enter your Otari or OpenAI key">
+        </div>
+        <div class="form-field">
+          <label for="hitlThresholdInput">Auto-HITL Mutation Risk Threshold (τ_HITL)</label>
+          <input type="number" id="hitlThresholdInput" min="0.1" max="0.95" step="0.05" value="0.65">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" id="saveSettingsBtn">Save Runtime Config</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- BUNDLE EXPORT MODAL -->
+  <div class="modal-backdrop" id="bundleModalBackdrop">
+    <div class="modal-card" style="max-width:660px;">
+      <div class="modal-header">
+        <strong style="font-size:13.5px;">📦 Ready-to-Deploy Open Agentic Web Bundle</strong>
+        <button type="button" class="btn btn-secondary btn-sm" id="closeBundleModalBtn">Close</button>
+      </div>
+      <div class="modal-body">
+        <div class="formula-box">
+          <span>Included Files: <code>index.html</code>, <code>target_assistant.network.json</code>, <code>site.js</code>, <code>README.md</code></span>
+          <span class="badge badge-success">SHA-256 Grounded</span>
+        </div>
+        <textarea id="bundleReadmePreview" class="code-area" style="min-height:170px;" readonly></textarea>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" id="copyBundleJsonBtn">📋 Copy .network.json</button>
+        <button type="button" class="btn btn-secondary" id="copyBundleSiteJsBtn">📋 Copy site.js</button>
+        <button type="button" class="btn btn-primary" id="triggerZipDownloadBtn">⬇ Download .zip Archive</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const SAMPLE_TEMPLATES = {
+      clinic: {
+        id: 'clinic',
+        name: 'Medical Clinic Booking',
+        domain: 'AuroraHealth_Clinic',
+        quickPrompts: [
+          'Select Cardiology and fill patient Ana Silva',
+          'Book appointment for Ana Silva on 2026-11-20 (Triggers HITL)',
+          'Cancel active appointment record (Triggers HITL)'
+        ],
+        html: `<div class="clinic-portal" id="clinicPortalRoot">
+  <h3>🏥 Aurora Health — Patient Appointment Portal</h3>
+  <p>Book a specialist consultation or manage your active clinical visits.</p>
+  <form id="appointmentForm" onsubmit="return false;">
+    <label for="patientNameInput">Patient Full Name</label>
+    <input type="text" id="patientNameInput" name="patientName" value="Diogo Soares" data-state-bind="patient.name">
+    <label for="specialtySelect">Medical Specialty</label>
+    <select id="specialtySelect" name="specialty" data-state-bind="booking.specialty">
+      <option value="General Practice ($80)">General Practice ($80)</option>
+      <option value="Cardiology ($150)">Cardiology ($150)</option>
+      <option value="Dermatology ($120)">Dermatology ($120)</option>
+    </select>
+    <label for="visitDateInput">Preferred Date</label>
+    <input type="date" id="visitDateInput" name="visitDate" value="2026-11-18" data-state-bind="booking.date">
+    <button type="button" id="checkAvailabilityBtn" data-action="query_slots">Check Doctor Slots</button>
+    <button type="submit" id="confirmBookingBtn" data-critical="submit_payment_booking">Confirm &amp; Pay Copay ($35)</button>
+    <button type="button" id="cancelVisitBtn" class="danger-btn" data-critical="delete_appointment">Cancel Existing Visit</button>
+  </form>
+  <div class="preview-state-banner" id="livePreviewStatus">Status: Ready | Active Patient: Diogo Soares</div>
+</div>`
+      },
+      store: {
+        id: 'store',
+        name: 'VoltEdge Tech Store',
+        domain: 'VoltEdge_Hardware_Store',
+        quickPrompts: [
+          'Select AI Workstation GPU and set quantity to 2',
+          'Apply promo code OPENWEB26 to cart',
+          'Complete instant checkout and charge card (Triggers HITL)'
+        ],
+        html: `<div class="store-portal" id="techStoreRoot">
+  <h3>💻 VoltEdge Hardware — Agentic Order Desk</h3>
+  <p>Configure developer workstations and open-source AI inference hardware.</p>
+  <form id="hardwareOrderForm" onsubmit="return false;">
+    <label for="productSelect">Hardware SKU</label>
+    <select id="productSelect" name="sku" data-state-bind="cart.sku">
+      <option value="Otari Local Router Box ($299)">Otari Local Router Box ($299)</option>
+      <option value="AI Workstation GPU 24GB ($1,199)">AI Workstation GPU 24GB ($1,199)</option>
+    </select>
+    <label for="quantityInput">Unit Quantity</label>
+    <input type="number" id="quantityInput" name="quantity" value="1" min="1" max="20" data-state-bind="cart.quantity">
+    <label for="promoCodeInput">Discount / Partner Code</label>
+    <input type="text" id="promoCodeInput" name="promoCode" placeholder="e.g. OPENWEB26" data-state-bind="cart.promo">
+    <button type="button" id="recalcCartBtn" data-action="recalculate_quote">Update Cart Quote</button>
+    <button type="submit" id="checkoutOrderBtn" data-critical="submit_purchase_checkout">Authorize &amp; Place Order</button>
+  </form>
+  <div class="preview-state-banner" id="livePreviewStatus">Cart: 1x Otari Local Router Box ($299)</div>
+</div>`
+      },
+      bounty: {
+        id: 'bounty',
+        name: 'Security Triage Portal',
+        domain: 'TrustSafety_Compliance_Portal',
+        quickPrompts: [
+          'Inspect item ext-9942-mal and select Remote Code Execution',
+          'Quarantine & Ban flagged item from store (Triggers HITL)',
+          'Escalate case to Senior Review Queue'
+        ],
+        html: `<div class="bounty-portal" id="securityTriageRoot">
+  <h3>🛡️ Trust &amp; Safety — Compliance Review Queue</h3>
+  <p>Audit flagged packages, inspect permissions, and enforce policy actions.</p>
+  <form id="triageQueueForm" onsubmit="return false;">
+    <label for="extensionIdInput">Target Package ID</label>
+    <input type="text" id="extensionIdInput" name="extensionId" value="item-8821-wallet" data-state-bind="audit.itemId">
+    <label for="violationPolicySelect">Detected Policy Violation</label>
+    <select id="violationPolicySelect" name="violationType" data-state-bind="audit.policy">
+      <option value="Excessive Host Permissions">Excessive Host Permissions</option>
+      <option value="Remote Code Execution / Dynamic eval()">Remote Code Execution / Dynamic eval()</option>
+    </select>
+    <button type="button" id="escalateCaseBtn" data-action="escalate_senior_queue">Escalate to Senior Reviewer</button>
+    <button type="submit" id="banExtensionBtn" class="danger-btn" data-critical="delete_ban_item">Confirm Permanent Takedown</button>
+  </form>
+  <div class="preview-state-banner" id="livePreviewStatus">Queue Item: item-8821-wallet | Verdict: Pending</div>
+</div>`
+      }
+    };
+
+    const STUDIO_OWN_NETWORK_JSON = {
+      network_name: "AgenticForge_Studio_Assistant",
+      version: "1.0.0",
+      runtime: "nsdeploy-browser-v1",
+      llm_config: { provider: "mozilla-otari", default_model: "alibaba/qwen-3.5-35b-a3b", cors_enabled: true, byok_required: true },
+      entry_agent: "Architect_Coordinator",
+      agents: [
+        { name: "Architect_Coordinator", role: "Front-desk orchestrator that guides the developer.", tools: ["get_studio_state", "load_sample_template"], downstream_agents: ["DOM_Scanner_Agent", "Topology_Builder_Agent", "Wiring_Generator_Agent"] },
+        { name: "DOM_Scanner_Agent", role: "Computes Actionability A(e_i) and Mutation Risk R(e_i).", tools: ["scan_target_dom", "highlight_dom_capabilities"] },
+        { name: "Topology_Builder_Agent", role: "Synthesizes the target site's .network.json specification.", tools: ["generate_network_json", "render_topology_graph"] },
+        { name: "Wiring_Generator_Agent", role: "Generates site.js state-grounding hooks and Auto-HITL interceptors.", tools: ["generate_site_js_hooks", "export_agentic_bundle"] }
+      ]
+    };
+
+    const AppState = {
+      currentTemplateKey: 'clinic',
+      hitlThreshold: 0.65,
+      activeCodeTab: 'networkJson',
+      topologyMode: 'target',
+      extractedCapabilities: [],
+      generatedNetworkObj: null,
+      generatedSiteJsCode: '',
+      llmConfig: { provider: 'otari', endpoint: 'https://api.otari.mozilla.org/v1/chat/completions', model: 'alibaba/qwen-3.5-35b-a3b', apiKey: '' },
+      pendingHitlResolver: null
+    };
+
+    function sigmoid(x) { return 1 / (1 + Math.exp(-x)); }
+
+    function parseAndScoreTargetDOM(rawHtml, tauHitl) {
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(rawHtml, 'text/html');
+      const interactiveNodes = doc.querySelectorAll('input, select, textarea, button');
+      const capabilities = [];
+      const criticalKeywords = ['submit', 'pay', 'confirm', 'buy', 'checkout', 'delete', 'cancel', 'ban', 'remove', 'takedown', 'authorize'];
+
+      interactiveNodes.forEach((node, idx) => {
+        const tag = node.tagName.toLowerCase();
+        const id = node.getAttribute('id') || `${tag}_${idx + 1}`;
+        const nameAttr = node.getAttribute('name') || '';
+        const labelEl = id ? doc.querySelector(`label[for="${id}"]`) : null;
+        const labelText = (labelEl ? labelEl.textContent : (node.textContent || node.getAttribute('placeholder') || id)).trim();
+        const typeAttr = (node.getAttribute('type') || '').toLowerCase();
+        const dataBind = node.getAttribute('data-state-bind') || '';
+        const dataCritical = node.getAttribute('data-critical') || '';
+        const classListStr = node.className || '';
+
+        const actionability = Number((0.45 * 1.0 + 0.35 * (node.getAttribute('id') ? 0.85 : 0.5) + 0.20 * ((dataBind || dataCritical || node.closest('form')) ? 1.0 : 0.3)).toFixed(2));
+        const isSubmitOrButton = (tag === 'button' || typeAttr === 'submit');
+        const mSubmit = (typeAttr === 'submit' || dataCritical !== '' || classListStr.includes('danger')) ? 1.0 : (isSubmitOrButton ? 0.2 : -0.9);
+
+        const combinedText = `${id} ${nameAttr} ${labelText} ${dataCritical} ${classListStr}`.toLowerCase();
+        let keywordMatches = 0;
+        criticalKeywords.forEach(kw => { if (combinedText.includes(kw)) keywordMatches += 1; });
+
+        const riskScore = Number(sigmoid(-1.25 + (1.65 * mSubmit) + (0.85 * keywordMatches)).toFixed(2));
+        const requiresHitl = riskScore >= tauHitl;
+        let opType = requiresHitl ? 'CRITICAL_MUTATION' : (tag === 'button' ? 'READ/QUERY' : 'WRITE');
+
+        const cleanSlug = (dataCritical || node.getAttribute('data-action') || id).replace(/[^a-zA-Z0-9_]/g, '_').replace(/([a-z])([A-Z])/g, '$1_$2').toLowerCase();
+        const toolName = tag === 'button' ? `exec_${cleanSlug}` : `set_${cleanSlug}`;
+
+        capabilities.push({ index: idx + 1, toolName, tag, typeAttr: typeAttr || tag, selector: `#${id}`, label: labelText.slice(0, 38), opType, actionability, riskScore, requiresHitl });
+      });
+      return capabilities;
+    }
+
+    function synthesizeTargetBlueprint(templateMeta, capabilities, tauHitl) {
+      const readTools = capabilities.filter(c => !c.requiresHitl).map(c => c.toolName);
+      const criticalTools = capabilities.filter(c => c.requiresHitl).map(c => c.toolName);
+
+      const networkObj = {
+        network_name: `${templateMeta.domain}_Agent_Network`,
+        version: "1.0.0",
+        generated_by: "AgenticForge Studio v1.0",
+        runtime_spec: "cognizant-nsdeploy-browser",
+        llm_router: { provider: AppState.llmConfig.provider, model: AppState.llmConfig.model, endpoint: AppState.llmConfig.endpoint, byok_supported: true },
+        safety_policy: { human_in_the_loop_threshold: tauHitl, enforced_tools: criticalTools },
+        entry_agent: "FrontDesk_Coordinator",
+        agents: [
+          { name: "FrontDesk_Coordinator", role: `Primary entry coordinator for ${templateMeta.name}.`, tools: ["getPageState"], downstream_agents: ["State_Form_Specialist", "Critical_Action_Specialist"] },
+          { name: "State_Form_Specialist", role: "Reads and updates non-destructive form inputs.", tools: readTools },
+          { name: "Critical_Action_Specialist", role: "Handles high-risk state mutations with mandatory HITL approval.", tools: criticalTools }
+        ]
+      };
+
+      const toolHooksCode = capabilities.map(cap => {
+        if (cap.requiresHitl) {
+          return `  // [HIGH-RISK MUTATION] A(e_i)=${cap.actionability} | R(e_i)=${cap.riskScore} >= ${tauHitl}\n  ${cap.toolName}: async function(params = {}) {\n    const approved = await window.AgenticForgeHITL.requestConfirmation({\n      toolName: "${cap.toolName}", agentName: "Critical_Action_Specialist", riskScore: ${cap.riskScore}, selector: "${cap.selector}", payload: params\n    });\n    if (!approved) return { status: "blocked_by_user_hitl", selector: "${cap.selector}" };\n    const el = document.querySelector("${cap.selector}");\n    if (el) el.click();\n    return { status: "executed_with_human_approval", selector: "${cap.selector}", snapshot: window.getPageState() };\n  }`;
+        } else if (cap.tag === 'button') {
+          return `  // [SAFE ACTION] A(e_i)=${cap.actionability} | R(e_i)=${cap.riskScore}\n  ${cap.toolName}: async function() {\n    const el = document.querySelector("${cap.selector}");\n    if (el) el.click();\n    return { status: "ok", action: "${cap.toolName}", snapshot: window.getPageState() };\n  }`;
+        } else {
+          return `  // [STATE INPUT BINDING] A(e_i)=${cap.actionability} | R(e_i)=${cap.riskScore}\n  ${cap.toolName}: async function(value) {\n    const el = document.querySelector("${cap.selector}");\n    if (!el) return { error: "Element not found: ${cap.selector}" };\n    el.value = value;\n    el.dispatchEvent(new Event("input", { bubbles: true }));\n    el.dispatchEvent(new Event("change", { bubbles: true }));\n    return { status: "updated", selector: "${cap.selector}", newValue: value, snapshot: window.getPageState() };\n  }`;
+        }
+      }).join(',\n\n');
+
+      const siteJsCode = `window.getPageState = function() {\n  const snapshot = { timestamp: new Date().toISOString(), fields: {} };\n  document.querySelectorAll("input, select, textarea").forEach(el => {\n    const key = el.id || el.name;\n    if (key) snapshot.fields[key] = el.value;\n  });\n  return snapshot;\n};\n\nwindow.AgenticSiteTools = {\n${toolHooksCode}\n};\n`;
+      return { networkObj, siteJsCode };
+    }
+
+    function renderTargetPreviewAndBindEvents() {
+      const previewWrap = document.getElementById('targetPreviewWrap');
+      previewWrap.innerHTML = document.getElementById('rawHtmlInput').value;
+      previewWrap.querySelectorAll('input, select, textarea, button').forEach(el => el.setAttribute('data-af-node', 'true'));
+
+      const updateBanner = () => {
+        const banner = previewWrap.querySelector('#livePreviewStatus');
+        if (!banner) return;
+        const fields = {};
+        previewWrap.querySelectorAll('input, select, textarea').forEach(el => { fields[el.id || el.name] = el.value; });
+        banner.textContent = `Grounded DOM State → ${Object.entries(fields).map(([k, v]) => `${k.replace(/Input|Select/g, '')}: ${v}`).join(' | ')}`;
+      };
+      previewWrap.querySelectorAll('input, select, textarea').forEach(el => {
+        el.addEventListener('input', updateBanner);
+        el.addEventListener('change', updateBanner);
+      });
+      previewWrap.querySelectorAll('button').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const banner = previewWrap.querySelector('#livePreviewStatus');
+          if (banner) banner.textContent = `Action Executed on DOM: [${btn.textContent.trim()}] at ${new Date().toLocaleTimeString()}`;
+        });
+      });
+    }
+
+    function renderCapabilitiesTable() {
+      const tbody = document.getElementById('capabilitiesTableBody');
+      document.getElementById('capCountLabel').textContent = AppState.extractedCapabilities.length;
+      tbody.innerHTML = AppState.extractedCapabilities.map(cap => {
+        const riskBadge = cap.requiresHitl ? `<span class="badge badge-danger">HITL Guard (≥${AppState.hitlThreshold})</span>` : `<span class="badge badge-success">Auto-Safe</span>`;
+        return `<tr style="cursor:pointer;" data-toolidx="${cap.index - 1}">
+          <td><strong>${cap.toolName}</strong><br><span style="font-size:10.5px; color:var(--muted);">${cap.label}</span></td>
+          <td><code class="selector-code">${cap.selector}</code></td>
+          <td><span style="font-size:10.5px; color:var(--muted);">${cap.opType}</span></td>
+          <td class="num-col">${cap.actionability.toFixed(2)}</td>
+          <td class="num-col" style="font-weight:700; color:${cap.requiresHitl ? '#f87171' : '#4ade80'};">${cap.riskScore.toFixed(2)}</td>
+          <td>${riskBadge}</td>
+        </tr>`;
+      }).join('');
+      tbody.querySelectorAll('tr[data-toolidx]').forEach(row => {
+        row.addEventListener('click', () => {
+          const cap = AppState.extractedCapabilities[parseInt(row.getAttribute('data-toolidx'), 10)];
+          if (cap) triggerDirectToolTest(cap);
+        });
+      });
+    }
+
+    function renderTopologyGraph() {
+      const svg = document.getElementById('topologySvg');
+      const templateMeta = SAMPLE_TEMPLATES[AppState.currentTemplateKey];
+      const safeCount = AppState.extractedCapabilities.filter(c => !c.requiresHitl).length;
+      const hitlCount = AppState.extractedCapabilities.filter(c => c.requiresHitl).length;
+      svg.innerHTML = `
+        <line x1="145" y1="105" x2="245" y2="60" stroke="#38bdf8" stroke-width="2" />
+        <line x1="145" y1="105" x2="245" y2="150" stroke="#f97316" stroke-width="2" />
+        <line x1="415" y1="60" x2="475" y2="60" stroke="#22c55e" stroke-width="1.8" stroke-dasharray="4" />
+        <line x1="415" y1="150" x2="475" y2="150" stroke="#ef4444" stroke-width="1.8" stroke-dasharray="4" />
+        <rect x="15" y="74" width="130" height="62" rx="9" fill="#1e293b" stroke="#38bdf8" stroke-width="2" />
+        <text x="80" y="98" fill="#ffffff" font-size="10.5" font-weight="700" text-anchor="middle">FrontDesk_Coordinator</text>
+        <text x="80" y="116" fill="#38bdf8" font-size="9" text-anchor="middle">${templateMeta.domain}</text>
+        <rect x="250" y="32" width="165" height="56" rx="8" fill="#111827" stroke="#22c55e" stroke-width="1.8" />
+        <text x="332" y="55" fill="#f1f5f9" font-size="10.5" font-weight="700" text-anchor="middle">State_Form_Specialist</text>
+        <text x="332" y="72" fill="#86efac" font-size="9" text-anchor="middle">R(eᵢ) &lt; ${AppState.hitlThreshold} (Auto-Safe)</text>
+        <rect x="250" y="122" width="165" height="56" rx="8" fill="#111827" stroke="#ef4444" stroke-width="1.8" />
+        <text x="332" y="145" fill="#f1f5f9" font-size="10.5" font-weight="700" text-anchor="middle">Critical_Action_Specialist</text>
+        <text x="332" y="162" fill="#fca5a5" font-size="9" text-anchor="middle">R(eᵢ) ≥ ${AppState.hitlThreshold} (HITL Guard)</text>
+        <rect x="480" y="38" width="125" height="44" rx="6" fill="#080b11" stroke="#22c55e" stroke-width="1.3" />
+        <text x="542" y="63" fill="#4ade80" font-size="10" font-weight="700" text-anchor="middle">${safeCount} Safe Tools</text>
+        <rect x="480" y="128" width="125" height="44" rx="6" fill="#080b11" stroke="#ef4444" stroke-width="1.3" />
+        <text x="542" y="153" fill="#f87171" font-size="10" font-weight="700" text-anchor="middle">${hitlCount} HITL Tools</text>
+      `;
+    }
+
+    function updateCodeViewer() {
+      const viewer = document.getElementById('generatedCodeViewer');
+      if (AppState.activeCodeTab === 'networkJson') viewer.value = JSON.stringify(AppState.generatedNetworkObj, null, 2);
+      else if (AppState.activeCodeTab === 'siteJs') viewer.value = AppState.generatedSiteJsCode;
+      else viewer.value = JSON.stringify(STUDIO_OWN_NETWORK_JSON, null, 2);
+    }
+
+    function renderSandboxQuickPrompts() {
+      const container = document.getElementById('sandboxQuickPrompts');
+      const templateMeta = SAMPLE_TEMPLATES[AppState.currentTemplateKey];
+      document.getElementById('sandboxActiveSiteBadge').textContent = `Target: ${templateMeta.name}`;
+      container.innerHTML = templateMeta.quickPrompts.map(p => `<button type="button" class="chip-btn sandbox-quick-btn" data-qprompt="${p}">${p}</button>`).join('');
+      container.querySelectorAll('.sandbox-quick-btn').forEach(btn => {
+        btn.addEventListener('click', () => runTargetSandboxSimulation(btn.getAttribute('data-qprompt')));
+      });
+    }
+
+    function runFullForgePipeline() {
+      const rawHtml = document.getElementById('rawHtmlInput').value;
+      const templateMeta = SAMPLE_TEMPLATES[AppState.currentTemplateKey];
+      renderTargetPreviewAndBindEvents();
+      AppState.extractedCapabilities = parseAndScoreTargetDOM(rawHtml, AppState.hitlThreshold);
+      const { networkObj, siteJsCode } = synthesizeTargetBlueprint(templateMeta, AppState.extractedCapabilities, AppState.hitlThreshold);
+      AppState.generatedNetworkObj = networkObj;
+      AppState.generatedSiteJsCode = siteJsCode;
+      renderCapabilitiesTable();
+      renderTopologyGraph();
+      updateCodeViewer();
+      renderSandboxQuickPrompts();
+    }
+
+    function requestHitlConfirmation({ toolName, agentName, riskScore, payload }) {
+      return new Promise(resolve => {
+        AppState.pendingHitlResolver = resolve;
+        document.getElementById('hitlToolName').textContent = toolName;
+        document.getElementById('hitlAgentName').textContent = agentName;
+        document.getElementById('hitlRiskScore').textContent = `R(eᵢ) = ${Number(riskScore).toFixed(2)}`;
+        document.getElementById('hitlPayloadPre').textContent = JSON.stringify(payload, null, 2);
+        document.getElementById('hitlModalBackdrop').classList.add('open');
+      });
+    }
+
+    document.getElementById('hitlApproveBtn').addEventListener('click', () => {
+      document.getElementById('hitlModalBackdrop').classList.remove('open');
+      if (AppState.pendingHitlResolver) { AppState.pendingHitlResolver(true); AppState.pendingHitlResolver = null; }
+    });
+    document.getElementById('hitlRejectBtn').addEventListener('click', () => {
+      document.getElementById('hitlModalBackdrop').classList.remove('open');
+      if (AppState.pendingHitlResolver) { AppState.pendingHitlResolver(false); AppState.pendingHitlResolver = null; }
+    });
+
+    function appendChatMessage(containerId, sender, text, type = 'agent') {
+      const log = document.getElementById(containerId);
+      const div = document.createElement('div');
+      div.className = `msg msg-${type}`;
+      div.innerHTML = `<span class="msg-sender">${sender}</span>${text}`;
+      log.appendChild(div);
+      log.scrollTop = log.scrollHeight;
+    }
+
+    function getLivePreviewSnapshot() {
+      const snap = {};
+      document.getElementById('targetPreviewWrap').querySelectorAll('input, select, textarea').forEach(el => { snap[el.id || el.name] = el.value; });
+      return snap;
+    }
+
+    async function triggerDirectToolTest(cap) {
+      const previewWrap = document.getElementById('targetPreviewWrap');
+      const el = previewWrap.querySelector(cap.selector);
+      appendChatMessage('sandboxChatLog', 'User', `Invoke <code>${cap.toolName}</code>`, 'user');
+      if (cap.requiresHitl) {
+        const approved = await requestHitlConfirmation({ toolName: cap.toolName, agentName: 'Critical_Action_Specialist', riskScore: cap.riskScore, payload: getLivePreviewSnapshot() });
+        if (!approved) { appendChatMessage('sandboxChatLog', 'HITL Guard', `✖ Cancelled <code>${cap.toolName}</code>.`, 'agent'); return; }
+        if (el) el.click();
+        appendChatMessage('sandboxChatLog', 'Critical_Action_Specialist', `✔ Approved &amp; executed <code>${cap.toolName}</code>.`, 'agent');
+      } else {
+        if (el) el.click();
+        appendChatMessage('sandboxChatLog', 'State_Form_Specialist', `Executed safe tool <code>${cap.toolName}</code>.`, 'tool');
+      }
+    }
+
+    async function runTargetSandboxSimulation(promptText) {
+      appendChatMessage('sandboxChatLog', 'User', promptText, 'user');
+      const lower = promptText.toLowerCase();
+      const isCritical = ['book', 'confirm', 'cancel', 'checkout', 'ban', 'hitl'].some(k => lower.includes(k));
+      if (isCritical) {
+        const criticalCap = AppState.extractedCapabilities.find(c => c.requiresHitl);
+        if (criticalCap) await triggerDirectToolTest(criticalCap);
+      } else {
+        appendChatMessage('sandboxChatLog', 'State_Form_Specialist', `Updated DOM state safely: <code>${JSON.stringify(getLivePreviewSnapshot())}</code>`, 'agent');
+      }
+    }
+
+    function loadTemplateByKey(key) {
+      AppState.currentTemplateKey = key;
+      document.querySelectorAll('.chip-btn[data-template]').forEach(btn => btn.classList.toggle('active', btn.getAttribute('data-template') === key));
+      document.getElementById('rawHtmlInput').value = SAMPLE_TEMPLATES[key].html;
+      runFullForgePipeline();
+    }
+
+    document.querySelectorAll('.chip-btn[data-template]').forEach(btn => btn.addEventListener('click', () => loadTemplateByKey(btn.getAttribute('data-template'))));
+    document.querySelectorAll('[data-lefttab]').forEach(tabBtn => {
+      tabBtn.addEventListener('click', () => {
+        document.querySelectorAll('[data-lefttab]').forEach(b => b.classList.remove('active'));
+        tabBtn.classList.add('active');
+        const mode = tabBtn.getAttribute('data-lefttab');
+        document.getElementById('targetPreviewWrap').style.display = mode === 'preview' ? 'block' : 'none';
+        document.getElementById('rawHtmlInput').style.display = mode === 'html' ? 'block' : 'none';
+      });
+    });
+    document.getElementById('toggleHighlightNodes').addEventListener('change', (e) => document.getElementById('targetPreviewWrap').classList.toggle('highlight-nodes', e.target.checked));
+    document.getElementById('scanDomBtn').addEventListener('click', runFullForgePipeline);
+    document.querySelectorAll('[data-codetab]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('[data-codetab]').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        AppState.activeCodeTab = btn.getAttribute('data-codetab');
+        updateCodeViewer();
+      });
+    });
+    document.getElementById('copyCodeBtn').addEventListener('click', () => navigator.clipboard?.writeText(document.getElementById('generatedCodeViewer').value));
+    document.getElementById('sandboxForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const input = document.getElementById('sandboxInput');
+      if (input.value.trim()) { runTargetSandboxSimulation(input.value.trim()); input.value = ''; }
+    });
+    document.getElementById('studioForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const input = document.getElementById('studioInput');
+      if (input.value.trim()) { appendChatMessage('studioChatLog', 'Architect_Coordinator', `Processed: ${input.value.trim()}`, 'agent'); input.value = ''; }
+    });
+    document.querySelectorAll('.studio-prompt-btn').forEach(btn => btn.addEventListener('click', () => appendChatMessage('studioChatLog', 'DOM_Scanner_Agent', `Audited ${AppState.extractedCapabilities.length} DOM tools.`, 'tool')));
+    document.getElementById('openLlmSettingsBtn').addEventListener('click', () => document.getElementById('settingsModalBackdrop').classList.add('open'));
+    document.getElementById('closeSettingsModalBtn').addEventListener('click', () => document.getElementById('settingsModalBackdrop').classList.remove('open'));
+    document.getElementById('saveSettingsBtn').addEventListener('click', () => {
+      AppState.hitlThreshold = parseFloat(document.getElementById('hitlThresholdInput').value) || 0.65;
+      document.getElementById('settingsModalBackdrop').classList.remove('open');
+      runFullForgePipeline();
+    });
+    document.getElementById('exportBundleBtn').addEventListener('click', () => document.getElementById('bundleModalBackdrop').classList.add('open'));
+    document.getElementById('closeBundleModalBtn').addEventListener('click', () => document.getElementById('bundleModalBackdrop').classList.remove('open'));
+    document.getElementById('triggerZipDownloadBtn').addEventListener('click', async () => {
+      if (window.JSZip) {
+        const zip = new JSZip();
+        zip.file('index.html', document.getElementById('rawHtmlInput').value);
+        zip.file('target_assistant.network.json', JSON.stringify(AppState.generatedNetworkObj, null, 2));
+        zip.file('site.js', AppState.generatedSiteJsCode);
+        const blob = await zip.generateAsync({ type: 'blob' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'agentic_website_bundle.zip';
+        a.click();
+      }
+    });
+
+    window.addEventListener('DOMContentLoaded', () => {
+      loadTemplateByKey('clinic');
+      appendChatMessage('sandboxChatLog', 'FrontDesk_Coordinator', 'Target site agent network initialized! Click any prompt above or table row to test.', 'agent');
+      appendChatMessage('studioChatLog', 'Architect_Coordinator', 'AgenticForge Studio active. Ready to inspect DOM and export bundles.', 'agent');
+    });
+  </script>
+</body>
+</html>

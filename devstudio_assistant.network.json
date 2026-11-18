@@ -1,0 +1,51 @@
+{
+  "network_name": "AgenticForge_Studio_Assistant",
+  "version": "1.0.0",
+  "runtime": "nsdeploy-browser-v1",
+  "llm_config": {
+    "provider": "mozilla-otari",
+    "default_model": "alibaba/qwen-3.5-35b-a3b",
+    "cors_enabled": true,
+    "byok_required": true
+  },
+  "entry_agent": "Architect_Coordinator",
+  "agents": [
+    {
+      "name": "Architect_Coordinator",
+      "role": "Front-desk orchestrator that guides the developer and routes tasks across the studio.",
+      "tools": [
+        "get_studio_state",
+        "load_sample_template"
+      ],
+      "downstream_agents": [
+        "DOM_Scanner_Agent",
+        "Topology_Builder_Agent",
+        "Wiring_Generator_Agent"
+      ]
+    },
+    {
+      "name": "DOM_Scanner_Agent",
+      "role": "Analyzes extracted DOM nodes, computes Actionability A(e_i) and Mutation Risk R(e_i), and flags destructive actions.",
+      "tools": [
+        "scan_target_dom",
+        "highlight_dom_capabilities"
+      ]
+    },
+    {
+      "name": "Topology_Builder_Agent",
+      "role": "Synthesizes the target site's .network.json specification and maps tools to specialist agents.",
+      "tools": [
+        "generate_network_json",
+        "render_topology_graph"
+      ]
+    },
+    {
+      "name": "Wiring_Generator_Agent",
+      "role": "Generates site.js state-grounding hooks and enforces Human-in-the-Loop interceptors whenever R(e_i) >= tau_HITL.",
+      "tools": [
+        "generate_site_js_hooks",
+        "export_agentic_bundle"
+      ]
+    }
+  ]
+}
