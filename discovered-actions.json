@@ -86,7 +86,7 @@
       "tag": "button",
       "effect": "irreversible_write",
       "actionability_score": 0.91,
-      "mutation_risk_score": 0.89,
+      "mutation_risk_score": 0.95,
       "requires_user_confirmation": true,
       "input_schema": {
         "type": "object",

@@ -25,10 +25,12 @@ window.RegisteredSiteActions = {
     handler: async function(value) {
       const el = document.querySelector("#productSelect");
       if (!el) return { status: "error_not_found", selector: "#productSelect" };
-      if (value !== undefined) {
+      if ("select" !== "button" && value !== undefined) {
         el.value = value;
         el.dispatchEvent(new Event("input", { bubbles: true }));
         el.dispatchEvent(new Event("change", { bubbles: true }));
+      } else {
+        el.click();
       }
       return { status: "ok", action: "set_product_select", snapshot: window.getPageState() };
     }
@@ -43,10 +45,12 @@ window.RegisteredSiteActions = {
     handler: async function(value) {
       const el = document.querySelector("#quantityInput");
       if (!el) return { status: "error_not_found", selector: "#quantityInput" };
-      if (value !== undefined) {
+      if ("input" !== "button" && value !== undefined) {
         el.value = value;
         el.dispatchEvent(new Event("input", { bubbles: true }));
         el.dispatchEvent(new Event("change", { bubbles: true }));
+      } else {
+        el.click();
       }
       return { status: "ok", action: "set_quantity_input", snapshot: window.getPageState() };
     }
@@ -61,10 +65,12 @@ window.RegisteredSiteActions = {
     handler: async function(value) {
       const el = document.querySelector("#promoCodeInput");
       if (!el) return { status: "error_not_found", selector: "#promoCodeInput" };
-      if (value !== undefined) {
+      if ("input" !== "button" && value !== undefined) {
         el.value = value;
         el.dispatchEvent(new Event("input", { bubbles: true }));
         el.dispatchEvent(new Event("change", { bubbles: true }));
+      } else {
+        el.click();
       }
       return { status: "ok", action: "set_promo_code_input", snapshot: window.getPageState() };
     }
@@ -76,15 +82,21 @@ window.RegisteredSiteActions = {
     purpose: "Update Cart Quote",
     effect: "read_only",
     requiresConfirmation: false,
-    handler: async function() {
+    handler: async function(value) {
       const el = document.querySelector("#recalcCartBtn");
       if (!el) return { status: "error_not_found", selector: "#recalcCartBtn" };
-      el.click();
+      if ("button" !== "button" && value !== undefined) {
+        el.value = value;
+        el.dispatchEvent(new Event("input", { bubbles: true }));
+        el.dispatchEvent(new Event("change", { bubbles: true }));
+      } else {
+        el.click();
+      }
       return { status: "ok", action: "exec_recalculate_quote", snapshot: window.getPageState() };
     }
   },
 
-  // [IRREVERSIBLE / HIGH-RISK WRITE] A(e_i)=0.91 | R(e_i)=0.89 >= 0.65
+  // [IRREVERSIBLE / HIGH-RISK WRITE] A(e_i)=0.91 | R(e_i)=0.95 >= 0.65
   exec_submit_purchase_checkout: {
     name: "exec_submit_purchase_checkout",
     purpose: "Authorize & Place Order",
@@ -96,7 +108,7 @@ window.RegisteredSiteActions = {
         requestId: requestId,
         toolName: "exec_submit_purchase_checkout",
         agentName: "Critical_Action_Specialist",
-        riskScore: 0.89,
+        riskScore: 0.95,
         selector: "#checkoutOrderBtn",
         payload: params
       });

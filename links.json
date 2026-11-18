@@ -2,10 +2,7 @@
   "version": 1,
   "networks": {
     "voltedge_hardware_store": {
-      "security_triage_peer": "./devstudio_assistant.network.json"
-    },
-    "devstudio_assistant": {
-      "voltedge_store_peer": "./voltedge_hardware_store.network.json"
+      "worldwide_agentic_web_peer": "https://worldwideagenticweb.org/"
     }
   }
 }

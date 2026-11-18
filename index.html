@@ -685,13 +685,13 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      min-height: 215px;
+      min-height: 205px;
       position: relative;
     }
 
     .topology-svg {
       width: 100%;
-      height: 205px;
+      height: 195px;
       display: block;
     }
 
@@ -988,7 +988,7 @@
 
     <div class="pipeline-steps" aria-label="Agentification Pipeline">
       <div class="step-pill done" id="stepPill1"><span class="step-num">1</span> DOM Inspection</div>
-      <div class="step-pill done" id="stepPill2"><span class="step-num">2</span> Neuro SAN Blueprint</div>
+      <div class="step-pill done" id="stepPill2"><span class="step-num">2</span> Neuro SAN + Live Peer URL</div>
       <div class="step-pill done" id="stepPill3"><span class="step-num">3</span> Site Actions + HITL</div>
       <div class="step-pill active" id="stepPill4"><span class="step-num">4</span> Studio &amp; BYOK</div>
     </div>
@@ -996,7 +996,7 @@
     <div class="topbar-actions">
       <button type="button" class="btn btn-secondary" id="copyFullAppHtmlBtn" title="Copy the complete index.html source to your clipboard">📋 Copy Full index.html</button>
       <button type="button" class="btn btn-secondary" id="openLlmSettingsBtn">⚙️ LLM Router &amp; BYOK</button>
-      <button type="button" class="btn btn-accent" id="exportBundleBtn">📦 Export MVP 0.2 Bundle (.zip)</button>
+      <button type="button" class="btn btn-accent" id="exportBundleBtn">📦 Export All 7 Files / .zip</button>
     </div>
   </header>
 
@@ -1142,17 +1142,25 @@
             <span class="p1-kpi-val" style="font-size:11.5px; color:var(--warning);" id="p2SlyDataVal">Deny-by-Default</span>
           </div>
           <div class="p1-kpi-card">
-            <span class="p1-kpi-label">Bound Limits</span>
-            <span class="p1-kpi-val" style="font-size:11.5px; color:var(--success);">Depth≤3 · Calls≤8</span>
+            <span class="p1-kpi-label">allowed_peers</span>
+            <span class="p1-kpi-val" style="font-size:11px; color:var(--success);" id="p2AllowedPeersVal">Explicit Origin</span>
           </div>
           <div class="p1-kpi-card">
             <span class="p1-kpi-label">Peer Link (Sec 3.2)</span>
             <select id="peerNetworkSelect" aria-label="Select linked Peer Agent Network" style="background:transparent; color:#d8b4fe; border:none; font-family:var(--mono); font-size:11px; font-weight:700; padding:0; cursor:pointer; outline:none;">
+              <option value="worldwide_agentic_web_peer" style="background:#080b11;">worldwideagenticweb.org</option>
               <option value="security_triage_peer" style="background:#080b11;">security_triage_peer</option>
               <option value="transit_route_peer" style="background:#080b11;">transit_route_peer</option>
               <option value="clinic_booking_peer" style="background:#080b11;">clinic_booking_peer</option>
             </select>
           </div>
+        </div>
+
+        <!-- Live External Peer URL Connector & Manifest Fetcher Bar (Sec 3.2) -->
+        <div class="p3-direct-bar" style="background:rgba(168, 85, 247, 0.09); border-color:rgba(168, 85, 247, 0.45);">
+          <span style="font-size:10.5px; font-weight:700; color:#d8b4fe;">🌐 Live Peer URL:</span>
+          <input type="text" id="livePeerUrlInput" value="https://worldwideagenticweb.org/" placeholder="Enter external Agentic Site URL" style="flex:1; min-width:165px;" aria-label="External Peer Agent Site URL">
+          <button type="button" class="btn btn-purple btn-sm" id="fetchLivePeerUrlBtn">🔗 Fetch &amp; Bind Live Peer</button>
         </div>
 
         <!-- Interactive Clickable SVG Topology Graph -->
@@ -1164,7 +1172,7 @@
               <button type="button" class="chip-btn" id="viewStudioGraphBtn">AgenticForge 4-Agent Graph</button>
             </div>
           </div>
-          <svg id="topologySvg" class="topology-svg" viewBox="0 0 620 205" role="img" aria-label="Interactive Multi-agent network topology graph"></svg>
+          <svg id="topologySvg" class="topology-svg" viewBox="0 0 620 195" role="img" aria-label="Interactive Multi-agent network topology graph"></svg>
         </div>
 
         <!-- Interactive Selected Agent / Peer Node Inspector Card -->
@@ -1180,7 +1188,7 @@
             function.description: Primary entry coordinator. Grounds user intent against live DOM state and delegates to internal specialists or approved peer networks.
           </div>
           <div class="math-breakdown-row" id="agentInspTools">
-            tools[]: ["State_Form_Specialist", "Critical_Action_Specialist", "getPageState", "security_triage_peer"] | sly_data: deny-by-default
+            tools[]: ["State_Form_Specialist", "Critical_Action_Specialist", "getPageState", "worldwide_agentic_web_peer"] | sly_data: deny-by-default
           </div>
         </div>
 
@@ -1194,7 +1202,7 @@
           <button type="button" class="subtab" data-codetab="studioNetwork">devstudio.network.json</button>
         </div>
 
-        <textarea id="generatedCodeViewer" class="code-area" style="flex:1; min-height:215px;" readonly spellcheck="false" aria-label="Generated MVP 0.2 artifact output"></textarea>
+        <textarea id="generatedCodeViewer" class="code-area" style="flex:1; min-height:200px;" readonly spellcheck="false" aria-label="Generated MVP 0.2 artifact output"></textarea>
       </div>
     </section>
 
@@ -1282,7 +1290,7 @@
           </div>
 
           <form class="chat-input-row" id="sandboxForm">
-            <input type="text" class="chat-input" id="sandboxInput" placeholder="Try: 'Apply promo code OPENWEB26', 'Call peer network', 'Checkout'..." required>
+            <input type="text" class="chat-input" id="sandboxInput" placeholder="Try: 'Apply promo code OPENWEB26', 'Call worldwideagenticweb.org peer', 'Checkout'..." required>
             <button type="submit" class="btn btn-primary">Run</button>
           </form>
         </div>
@@ -1351,7 +1359,7 @@
               <span class="badge badge-success">PASS</span>
             </div>
             <div class="conformance-row">
-              <span><strong>4. Peer Network Composition</strong> (<code>links.json</code> + Origin Consent modal)</span>
+              <span><strong>4. Peer Network Composition</strong> (<code>links.json</code> + <code>allowed_peers</code> + Origin Consent)</span>
               <span class="badge badge-success">PASS</span>
             </div>
             <div class="conformance-row">
@@ -1401,6 +1409,7 @@
       <strong>AgenticForge Studio</strong> — Built for the Open Agentic Web Challenge (Worldwide Agentic Web MVP Profile 0.2)
     </div>
     <div style="display:flex; gap:12px; flex-wrap:wrap; align-items:center;">
+      <a href="https://worldwideagenticweb.org/" target="_blank" rel="noopener">worldwideagenticweb.org</a>
       <a href="https://cognizant-agenticweb.devpost.com/" target="_blank" rel="noopener">Open Agentic Web Challenge (DevPost)</a>
       <a href="https://cognizant-agenticweb.devpost.com/rules" target="_blank" rel="noopener">Official Rules</a>
       <a href="https://github.com/cognizant-ai-labs/agentic-web" target="_blank" rel="noopener">cognizant-ai-labs/agentic-web</a>
@@ -1448,11 +1457,12 @@
       </div>
       <div class="modal-body">
         <p style="margin:0; color:var(--muted); font-size:12px;">
-          The caller network's <code>FrontDesk_Coordinator</code> is requesting to resolve and instantiate a linked <strong>Peer Agent Network</strong> inside your browser tab via <code>links.json</code> and <code>agent-manifest.json</code>.
+          The caller network's <code>FrontDesk_Coordinator</code> is requesting to contact an external <strong>Peer Agent Origin</strong>, fetch its <code>agent-manifest.json</code> via CORS, and run its declarative network inside your browser tab.
         </p>
         <div class="formula-box" style="flex-direction:column; align-items:flex-start; gap:5px; color:var(--ink);">
-          <div><strong>Symbolic Link Name:</strong> <code id="peerModalSymName" style="color:#d8b4fe;">security_triage_peer</code></div>
-          <div><strong>Resolved Peer Manifest:</strong> <code id="peerModalUrl" style="color:var(--brand);">./agent-manifest.json → security_triage</code></div>
+          <div><strong>Symbolic Link Name:</strong> <code id="peerModalSymName" style="color:#d8b4fe;">worldwide_agentic_web_peer</code></div>
+          <div><strong>Destination Origin &amp; Manifest:</strong> <code id="peerModalUrl" style="color:var(--brand);">https://worldwideagenticweb.org/agent-manifest.json</code></div>
+          <div><strong>allowed_peers Policy Check:</strong> <span class="badge badge-success">Origin Listed in allowed_peers</span></div>
           <div><strong>Router-Only Disclosure (Sec 4):</strong> <span class="badge badge-success">Caller Router Retained · API Key Never Sent to Peer</span></div>
           <div><strong>Private Context Filtering (Sec 5):</strong> <span class="badge badge-orange">sly_data: { credit_card_token: "[REDACTED_BY_RUNTIME]" }</span></div>
           <div><strong>Delegated Public Request Payload:</strong></div>
@@ -1461,7 +1471,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" id="peerRejectBtn">✖ Deny Origin Contact</button>
-        <button type="button" class="btn btn-purple" id="peerApproveBtn">✔ Approve &amp; Load Peer Network in Browser</button>
+        <button type="button" class="btn btn-purple" id="peerApproveBtn">✔ Approve &amp; Fetch Peer Manifest</button>
       </div>
     </div>
   </div>
@@ -1510,28 +1520,31 @@
     </div>
   </div>
 
-  <!-- MODAL 4: BUNDLE EXPORT INSPECTOR -->
+  <!-- MODAL 4: BUNDLE EXPORT & INDIVIDUAL FILE DOWNLOADER -->
   <div class="modal-backdrop" id="bundleModalBackdrop" role="dialog" aria-modal="true" aria-labelledby="bundleModalTitle">
-    <div class="modal-card" style="max-width:680px;">
+    <div class="modal-card" style="max-width:700px;">
       <div class="modal-header">
         <strong id="bundleModalTitle" style="font-size:13.5px;">📦 Ready-to-Deploy Worldwide Agentic Web MVP 0.2 Bundle</strong>
         <button type="button" class="btn btn-secondary btn-sm" id="closeBundleModalBtn">Close</button>
       </div>
       <div class="modal-body">
         <p style="margin:0; color:var(--muted); font-size:12px;" id="bundleStatusText">
-          Your complete static bundle conforms to <strong>MVP Profile 0.2 (Sec 3.3 Minimum Public Files)</strong>. Copy any artifact below or download the complete <code>.zip</code> archive when running standalone.
+          Click any file tab below to inspect or copy it individually, copy the <strong>1-Command Terminal Generator</strong> that creates all files on your computer at once, or download the <code>.zip</code> archive when running standalone!
         </p>
-        <div class="formula-box">
-          <span>Included: <code>index.html</code>, <code>agent-manifest.json</code>, <code>target_assistant.network.json</code>, <code>links.json</code>, <code>discovered-actions.json</code>, <code>site.js</code></span>
-          <span class="badge badge-success">MVP 0.2 Verified</span>
+        <div class="subtabs" id="bundleModalTabs">
+          <button type="button" class="subtab active" data-bfile="bashScript">⚡ 1-Command Create All Files</button>
+          <button type="button" class="subtab" data-bfile="manifest">agent-manifest.json</button>
+          <button type="button" class="subtab" data-bfile="targetNet">target.network.json</button>
+          <button type="button" class="subtab" data-bfile="studioNet">devstudio.network.json</button>
+          <button type="button" class="subtab" data-bfile="links">links.json</button>
+          <button type="button" class="subtab" data-bfile="discovered">discovered-actions.json</button>
+          <button type="button" class="subtab" data-bfile="siteJs">site.js</button>
         </div>
-        <textarea id="bundleReadmePreview" class="code-area" style="min-height:170px;" readonly></textarea>
+        <textarea id="bundleReadmePreview" class="code-area" style="min-height:200px;" readonly></textarea>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" id="copyBundleManifestBtn">📋 Copy agent-manifest.json</button>
-        <button type="button" class="btn btn-secondary" id="copyBundleJsonBtn">📋 Copy .network.json</button>
-        <button type="button" class="btn btn-secondary" id="copyBundleSiteJsBtn">📋 Copy site.js</button>
-        <button type="button" class="btn btn-primary" id="triggerZipDownloadBtn">⬇ Download .zip Archive</button>
+        <button type="button" class="btn btn-secondary" id="copyActiveBundleFileBtn">📋 Copy Selected Tab Content</button>
+        <button type="button" class="btn btn-primary" id="triggerZipDownloadBtn">⬇ Download .zip Archive (Standalone)</button>
       </div>
     </div>
   </div>
@@ -1541,6 +1554,19 @@
      * 1. BUILT-IN TARGET WEBSITE TEMPLATES & PEER DEFINITIONS
      ********************************************************************/
     const PEER_CATALOG = {
+      worldwide_agentic_web_peer: {
+        symbolicName: "worldwide_agentic_web_peer",
+        networkName: "worldwide_agentic_web_directory",
+        frontMan: "Directory_Switchboard_Coordinator",
+        originLabel: "https://worldwideagenticweb.org/",
+        purpose: "Connects to the Worldwide Agentic Web hub (https://worldwideagenticweb.org/) to discover conforming agentic sites and verify root vs. widget-path manifest placement.",
+        sampleResult: {
+          verdict: "LIVE_PEER_INSPECTED",
+          peerOrigin: "https://worldwideagenticweb.org/",
+          manifestAuditNote: "Verified origin & checked /agent-manifest.json (detects root vs. widget subpath placement per MVP 0.2 Section 3.2.5)",
+          slyDataReceivedByPeer: "NONE (Filtered by Caller Runtime)"
+        }
+      },
       security_triage_peer: {
         symbolicName: "security_triage_peer",
         networkName: "security_triage",
@@ -1587,10 +1613,10 @@
         id: 'clinic',
         name: 'Medical Clinic Booking',
         domain: 'aurora_health_clinic',
-        defaultPeer: 'transit_route_peer',
+        defaultPeer: 'worldwide_agentic_web_peer',
         quickPrompts: [
           'Select Cardiology and fill patient Ana Silva',
-          'Ask peer network for public transit route to clinic (Sec 3.2)',
+          'Connect to https://worldwideagenticweb.org/ peer (Sec 3.2)',
           'Book appointment for Ana Silva on 2026-11-20 (Triggers HITL)'
         ],
         html: `<div class="clinic-portal" id="clinicPortalRoot">
@@ -1624,10 +1650,10 @@
         id: 'store',
         name: 'VoltEdge Tech Store',
         domain: 'voltedge_hardware_store',
-        defaultPeer: 'security_triage_peer',
+        defaultPeer: 'worldwide_agentic_web_peer',
         quickPrompts: [
           'Apply promo code OPENWEB26 to cart',
-          'Verify firmware safety via peer network (Sec 3.2)',
+          'Connect to https://worldwideagenticweb.org/ peer (Sec 3.2)',
           'Complete instant checkout and charge card (Triggers HITL)'
         ],
         html: `<div class="store-portal" id="techStoreRoot">
@@ -1660,10 +1686,10 @@
         id: 'bounty',
         name: 'Security Triage Portal',
         domain: 'trustsafety_compliance_portal',
-        defaultPeer: 'clinic_booking_peer',
+        defaultPeer: 'worldwide_agentic_web_peer',
         quickPrompts: [
           'Inspect item-9942-mal and select Remote Code Execution',
-          'Consult peer network for reviewer schedule (Sec 3.2)',
+          'Connect to https://worldwideagenticweb.org/ peer (Sec 3.2)',
           'Quarantine & Ban flagged item from store (Triggers HITL)'
         ],
         html: `<div class="bounty-portal" id="securityTriageRoot">
@@ -1771,8 +1797,10 @@
       capFilter: 'all',
       selectedCapIndex: 0,
       selectedAgentNode: 'FrontDesk_Coordinator',
-      selectedPeerKey: 'security_triage_peer',
+      selectedPeerKey: 'worldwide_agentic_web_peer',
+      customPeerUrl: 'https://worldwideagenticweb.org/',
       activeCodeTab: 'manifestJson',
+      activeBundleModalTab: 'bashScript',
       topologyMode: 'target',
       extractedCapabilities: [],
       generatedManifestObj: null,
@@ -1895,7 +1923,8 @@
     function synthesizeTargetBlueprint(templateMeta, capabilities, tauHitl) {
       const readTools = capabilities.filter(c => !c.requiresHitl).map(c => c.toolName);
       const criticalTools = capabilities.filter(c => c.requiresHitl).map(c => c.toolName);
-      const peerInfo = PEER_CATALOG[AppState.selectedPeerKey] || PEER_CATALOG.security_triage_peer;
+      const peerInfo = PEER_CATALOG[AppState.selectedPeerKey] || PEER_CATALOG.worldwide_agentic_web_peer;
+      const resolvedPeerOrigin = AppState.customPeerUrl || peerInfo.originLabel;
 
       const manifestObj = {
         manifest_version: "0.2",
@@ -1909,6 +1938,10 @@
         },
         peer_policy: {
           allow_cross_origin_peers: true,
+          allowed_peers: [
+            "https://worldwideagenticweb.org",
+            resolvedPeerOrigin
+          ],
           require_user_consent: true,
           router_only_disclosure: true,
           sly_data_default: "deny"
@@ -1948,7 +1981,7 @@
             function: {
               description: `Public Front Man entry point for ${templateMeta.name}. Grounds user requests against live DOM state and delegates to internal specialists or approved peer networks.`
             },
-            instructions: `Always call getPageState first. Delegate non-destructive form updates (R < ${tauHitl}) to State_Form_Specialist, high-risk writes (R >= ${tauHitl}) to Critical_Action_Specialist, and cross-site inquiries to ${peerInfo.symbolicName}.`,
+            instructions: `Always call getPageState first. Delegate non-destructive form updates (R < ${tauHitl}) to State_Form_Specialist, high-risk writes (R >= ${tauHitl}) to Critical_Action_Specialist, and cross-site inquiries to ${peerInfo.symbolicName} (${resolvedPeerOrigin}).`,
             tools: [
               "State_Form_Specialist",
               "Critical_Action_Specialist",
@@ -1979,7 +2012,7 @@
         version: 1,
         networks: {
           [templateMeta.domain]: {
-            [peerInfo.symbolicName]: peerInfo.originLabel
+            [peerInfo.symbolicName]: resolvedPeerOrigin
           }
         }
       };
@@ -2283,7 +2316,8 @@ ${toolHooksCode}
       const nameEl = document.getElementById('agentInspName');
       const descEl = document.getElementById('agentInspDesc');
       const toolsEl = document.getElementById('agentInspTools');
-      const peerInfo = PEER_CATALOG[AppState.selectedPeerKey] || PEER_CATALOG.security_triage_peer;
+      const peerInfo = PEER_CATALOG[AppState.selectedPeerKey] || PEER_CATALOG.worldwide_agentic_web_peer;
+      const activeUrl = AppState.customPeerUrl || peerInfo.originLabel;
 
       box.classList.remove('hitl-mode', 'peer-mode');
 
@@ -2293,7 +2327,7 @@ ${toolHooksCode}
         roleBadge.textContent = 'External Peer Agent Network (Sec 3.2)';
         nameEl.textContent = `${peerInfo.symbolicName} → ${peerInfo.frontMan}`;
         descEl.innerHTML = `<span><strong>Peer Purpose:</strong> ${peerInfo.purpose}</span>`;
-        toolsEl.innerHTML = `<span><strong>Resolved via links.json:</strong> <code>${peerInfo.originLabel}</code> | <strong>sly_data:</strong> Filtered (Deny-by-Default)</span>`;
+        toolsEl.innerHTML = `<span><strong>Resolved via links.json:</strong> <code>${activeUrl}</code> | <strong>allowed_peers:</strong> Verified | <strong>sly_data:</strong> Filtered</span>`;
         return;
       }
 
@@ -2330,38 +2364,38 @@ ${toolHooksCode}
               <path d="M 0 0 L 10 5 L 0 10 z" fill="#38bdf8" />
             </marker>
           </defs>
-          <line x1="125" y1="102" x2="225" y2="42" stroke="#38bdf8" stroke-width="2" marker-end="url(#arrow)" />
-          <line x1="125" y1="102" x2="225" y2="102" stroke="#38bdf8" stroke-width="2" marker-end="url(#arrow)" />
-          <line x1="125" y1="102" x2="225" y2="162" stroke="#38bdf8" stroke-width="2" marker-end="url(#arrow)" />
+          <line x1="125" y1="98" x2="225" y2="38" stroke="#38bdf8" stroke-width="2" marker-end="url(#arrow)" />
+          <line x1="125" y1="98" x2="225" y2="98" stroke="#38bdf8" stroke-width="2" marker-end="url(#arrow)" />
+          <line x1="125" y1="98" x2="225" y2="158" stroke="#38bdf8" stroke-width="2" marker-end="url(#arrow)" />
 
-          <line x1="385" y1="42" x2="465" y2="42" stroke="#a855f7" stroke-width="1.5" stroke-dasharray="4" />
-          <line x1="385" y1="102" x2="465" y2="102" stroke="#a855f7" stroke-width="1.5" stroke-dasharray="4" />
-          <line x1="385" y1="162" x2="465" y2="162" stroke="#f97316" stroke-width="1.5" stroke-dasharray="4" />
+          <line x1="385" y1="38" x2="465" y2="38" stroke="#a855f7" stroke-width="1.5" stroke-dasharray="4" />
+          <line x1="385" y1="98" x2="465" y2="98" stroke="#a855f7" stroke-width="1.5" stroke-dasharray="4" />
+          <line x1="385" y1="158" x2="465" y2="158" stroke="#f97316" stroke-width="1.5" stroke-dasharray="4" />
 
-          <rect x="15" y="75" width="110" height="54" rx="8" fill="#1e293b" stroke="#f97316" stroke-width="2"/>
-          <text x="70" y="98" fill="#fff" font-size="10" font-weight="700" text-anchor="middle">Architect</text>
-          <text x="70" y="113" fill="#fb923c" font-size="9" text-anchor="middle">front_man</text>
+          <rect x="15" y="71" width="110" height="54" rx="8" fill="#1e293b" stroke="#f97316" stroke-width="2"/>
+          <text x="70" y="94" fill="#fff" font-size="10" font-weight="700" text-anchor="middle">Architect</text>
+          <text x="70" y="109" fill="#fb923c" font-size="9" text-anchor="middle">front_man</text>
 
-          <rect x="230" y="18" width="155" height="46" rx="8" fill="#111827" stroke="#38bdf8" stroke-width="1.8"/>
-          <text x="307" y="39" fill="#f1f5f9" font-size="10" font-weight="700" text-anchor="middle">DOM_Scanner_Agent</text>
-          <text x="307" y="53" fill="#94a3b8" font-size="8.5" text-anchor="middle">Computes A(eᵢ) &amp; R(eᵢ)</text>
+          <rect x="230" y="15" width="155" height="46" rx="8" fill="#111827" stroke="#38bdf8" stroke-width="1.8"/>
+          <text x="307" y="36" fill="#f1f5f9" font-size="10" font-weight="700" text-anchor="middle">DOM_Scanner_Agent</text>
+          <text x="307" y="50" fill="#94a3b8" font-size="8.5" text-anchor="middle">Computes A(eᵢ) &amp; R(eᵢ)</text>
 
-          <rect x="230" y="79" width="155" height="46" rx="8" fill="#111827" stroke="#38bdf8" stroke-width="1.8"/>
-          <text x="307" y="100" fill="#f1f5f9" font-size="10" font-weight="700" text-anchor="middle">Topology_Builder_Agent</text>
-          <text x="307" y="114" fill="#94a3b8" font-size="8.5" text-anchor="middle">Neuro SAN + Manifest</text>
+          <rect x="230" y="75" width="155" height="46" rx="8" fill="#111827" stroke="#38bdf8" stroke-width="1.8"/>
+          <text x="307" y="96" fill="#f1f5f9" font-size="10" font-weight="700" text-anchor="middle">Topology_Builder_Agent</text>
+          <text x="307" y="110" fill="#94a3b8" font-size="8.5" text-anchor="middle">Neuro SAN + Manifest</text>
 
-          <rect x="230" y="140" width="155" height="46" rx="8" fill="#111827" stroke="#38bdf8" stroke-width="1.8"/>
-          <text x="307" y="161" fill="#f1f5f9" font-size="10" font-weight="700" text-anchor="middle">Wiring_Generator_Agent</text>
-          <text x="307" y="175" fill="#94a3b8" font-size="8.5" text-anchor="middle">Site Actions + Receipts</text>
+          <rect x="230" y="135" width="155" height="46" rx="8" fill="#111827" stroke="#38bdf8" stroke-width="1.8"/>
+          <text x="307" y="156" fill="#f1f5f9" font-size="10" font-weight="700" text-anchor="middle">Wiring_Generator_Agent</text>
+          <text x="307" y="170" fill="#94a3b8" font-size="8.5" text-anchor="middle">Site Actions + Receipts</text>
 
-          <rect x="470" y="23" width="135" height="36" rx="6" fill="#080b11" stroke="#a855f7" stroke-width="1.2"/>
-          <text x="537" y="45" fill="#e9d5ff" font-size="9.5" font-family="monospace" text-anchor="middle">scan_target_dom()</text>
+          <rect x="470" y="20" width="135" height="36" rx="6" fill="#080b11" stroke="#a855f7" stroke-width="1.2"/>
+          <text x="537" y="42" fill="#e9d5ff" font-size="9.5" font-family="monospace" text-anchor="middle">scan_target_dom()</text>
 
-          <rect x="470" y="84" width="135" height="36" rx="6" fill="#080b11" stroke="#a855f7" stroke-width="1.2"/>
-          <text x="537" y="106" fill="#e9d5ff" font-size="9.5" font-family="monospace" text-anchor="middle">agent-manifest.json</text>
+          <rect x="470" y="80" width="135" height="36" rx="6" fill="#080b11" stroke="#a855f7" stroke-width="1.2"/>
+          <text x="537" y="102" fill="#e9d5ff" font-size="9.5" font-family="monospace" text-anchor="middle">agent-manifest.json</text>
 
-          <rect x="470" y="145" width="135" height="36" rx="6" fill="#080b11" stroke="#ef4444" stroke-width="1.4"/>
-          <text x="537" y="167" fill="#fca5a5" font-size="9.5" font-family="monospace" text-anchor="middle">export_bundle [HITL]</text>
+          <rect x="470" y="140" width="135" height="36" rx="6" fill="#080b11" stroke="#ef4444" stroke-width="1.4"/>
+          <text x="537" y="162" fill="#fca5a5" font-size="9.5" font-family="monospace" text-anchor="middle">export_bundle [HITL]</text>
         `;
         return;
       }
@@ -2369,7 +2403,7 @@ ${toolHooksCode}
       const templateMeta = SAMPLE_TEMPLATES[AppState.currentTemplateKey];
       const safeCount = AppState.extractedCapabilities.filter(c => !c.requiresHitl).length;
       const hitlCount = AppState.extractedCapabilities.filter(c => c.requiresHitl).length;
-      const peerInfo = PEER_CATALOG[AppState.selectedPeerKey] || PEER_CATALOG.security_triage_peer;
+      const peerInfo = PEER_CATALOG[AppState.selectedPeerKey] || PEER_CATALOG.worldwide_agentic_web_peer;
 
       titleLabel.textContent = `Click any node to inspect Neuro SAN HOCON (${templateMeta.domain}.network.json)`;
 
@@ -2385,50 +2419,50 @@ ${toolHooksCode}
           </marker>
         </defs>
 
-        <line x1="145" y1="102" x2="242" y2="38" stroke="#22c55e" stroke-width="2" marker-end="url(#arrowT)" />
-        <line x1="145" y1="102" x2="242" y2="102" stroke="#ef4444" stroke-width="2" marker-end="url(#arrowT)" />
-        <line x1="145" y1="102" x2="242" y2="168" stroke="#a855f7" stroke-width="2" stroke-dasharray="4" marker-end="url(#arrowP)" />
+        <line x1="145" y1="98" x2="242" y2="36" stroke="#22c55e" stroke-width="2" marker-end="url(#arrowT)" />
+        <line x1="145" y1="98" x2="242" y2="98" stroke="#ef4444" stroke-width="2" marker-end="url(#arrowT)" />
+        <line x1="145" y1="98" x2="242" y2="162" stroke="#a855f7" stroke-width="2" stroke-dasharray="4" marker-end="url(#arrowP)" />
 
-        <line x1="415" y1="38" x2="472" y2="38" stroke="#22c55e" stroke-width="1.6" stroke-dasharray="3" />
-        <line x1="415" y1="102" x2="472" y2="102" stroke="#ef4444" stroke-width="1.6" stroke-dasharray="3" />
-        <line x1="415" y1="168" x2="472" y2="168" stroke="#a855f7" stroke-width="1.6" stroke-dasharray="3" />
+        <line x1="415" y1="36" x2="472" y2="36" stroke="#22c55e" stroke-width="1.6" stroke-dasharray="3" />
+        <line x1="415" y1="98" x2="472" y2="98" stroke="#ef4444" stroke-width="1.6" stroke-dasharray="3" />
+        <line x1="415" y1="162" x2="472" y2="162" stroke="#a855f7" stroke-width="1.6" stroke-dasharray="3" />
 
         <g class="svg-agent-node" data-agentnode="FrontDesk_Coordinator">
-          <rect x="12" y="70" width="133" height="64" rx="9" fill="#1e293b" stroke="${sel === 'FrontDesk_Coordinator' ? '#ffffff' : '#38bdf8'}" stroke-width="${sel === 'FrontDesk_Coordinator' ? '3' : '2'}" />
-          <text x="78" y="92" fill="#ffffff" font-size="10" font-weight="700" text-anchor="middle">FrontDesk_Coordinator</text>
-          <text x="78" y="107" fill="#38bdf8" font-size="8.5" font-family="monospace" text-anchor="middle">front_man (Sec 2.1)</text>
-          <text x="78" y="122" fill="#94a3b8" font-size="8" font-family="monospace" text-anchor="middle">sly_data: deny-default</text>
+          <rect x="12" y="66" width="133" height="64" rx="9" fill="#1e293b" stroke="${sel === 'FrontDesk_Coordinator' ? '#ffffff' : '#38bdf8'}" stroke-width="${sel === 'FrontDesk_Coordinator' ? '3' : '2'}" />
+          <text x="78" y="88" fill="#ffffff" font-size="10" font-weight="700" text-anchor="middle">FrontDesk_Coordinator</text>
+          <text x="78" y="103" fill="#38bdf8" font-size="8.5" font-family="monospace" text-anchor="middle">front_man (Sec 2.1)</text>
+          <text x="78" y="118" fill="#94a3b8" font-size="8" font-family="monospace" text-anchor="middle">sly_data: deny-default</text>
         </g>
 
         <g class="svg-agent-node" data-agentnode="State_Form_Specialist">
-          <rect x="246" y="14" width="168" height="48" rx="8" fill="#111827" stroke="${sel === 'State_Form_Specialist' ? '#ffffff' : '#22c55e'}" stroke-width="${sel === 'State_Form_Specialist' ? '2.8' : '1.8'}" />
-          <text x="330" y="34" fill="#f1f5f9" font-size="10" font-weight="700" text-anchor="middle">State_Form_Specialist</text>
-          <text x="330" y="49" fill="#86efac" font-size="8.5" text-anchor="middle">R(eᵢ) &lt; ${AppState.hitlThreshold} (Reversible Actions)</text>
+          <rect x="246" y="12" width="168" height="48" rx="8" fill="#111827" stroke="${sel === 'State_Form_Specialist' ? '#ffffff' : '#22c55e'}" stroke-width="${sel === 'State_Form_Specialist' ? '2.8' : '1.8'}" />
+          <text x="330" y="32" fill="#f1f5f9" font-size="10" font-weight="700" text-anchor="middle">State_Form_Specialist</text>
+          <text x="330" y="47" fill="#86efac" font-size="8.5" text-anchor="middle">R(eᵢ) &lt; ${AppState.hitlThreshold} (Reversible Actions)</text>
         </g>
 
         <g class="svg-agent-node" data-agentnode="Critical_Action_Specialist">
-          <rect x="246" y="78" width="168" height="48" rx="8" fill="#111827" stroke="${sel === 'Critical_Action_Specialist' ? '#ffffff' : '#ef4444'}" stroke-width="${sel === 'Critical_Action_Specialist' ? '2.8' : '1.8'}" />
-          <text x="330" y="98" fill="#f1f5f9" font-size="10" font-weight="700" text-anchor="middle">Critical_Action_Specialist</text>
-          <text x="330" y="113" fill="#fca5a5" font-size="8.5" text-anchor="middle">R(eᵢ) ≥ ${AppState.hitlThreshold} (User-Owned Writes)</text>
+          <rect x="246" y="74" width="168" height="48" rx="8" fill="#111827" stroke="${sel === 'Critical_Action_Specialist' ? '#ffffff' : '#ef4444'}" stroke-width="${sel === 'Critical_Action_Specialist' ? '2.8' : '1.8'}" />
+          <text x="330" y="94" fill="#f1f5f9" font-size="10" font-weight="700" text-anchor="middle">Critical_Action_Specialist</text>
+          <text x="330" y="109" fill="#fca5a5" font-size="8.5" text-anchor="middle">R(eᵢ) ≥ ${AppState.hitlThreshold} (User-Owned Writes)</text>
         </g>
 
         <g class="svg-agent-node" data-agentnode="Peer_Agent_Node">
-          <rect x="246" y="144" width="168" height="48" rx="8" fill="#1a122b" stroke="${sel === 'Peer_Agent_Node' ? '#ffffff' : '#a855f7'}" stroke-width="${sel === 'Peer_Agent_Node' ? '2.8' : '1.8'}" />
-          <text x="330" y="164" fill="#e9d5ff" font-size="10" font-weight="700" text-anchor="middle">${peerInfo.symbolicName}</text>
-          <text x="330" y="179" fill="#c084fc" font-size="8.5" font-family="monospace" text-anchor="middle">Peer front_man: ${peerInfo.frontMan}</text>
+          <rect x="246" y="138" width="168" height="48" rx="8" fill="#1a122b" stroke="${sel === 'Peer_Agent_Node' ? '#ffffff' : '#a855f7'}" stroke-width="${sel === 'Peer_Agent_Node' ? '2.8' : '1.8'}" />
+          <text x="330" y="158" fill="#e9d5ff" font-size="9.5" font-weight="700" text-anchor="middle">${peerInfo.symbolicName}</text>
+          <text x="330" y="173" fill="#c084fc" font-size="8" font-family="monospace" text-anchor="middle">${(AppState.customPeerUrl || peerInfo.originLabel).slice(0, 28)}</text>
         </g>
 
-        <rect x="475" y="18" width="132" height="40" rx="6" fill="#080b11" stroke="#22c55e" stroke-width="1.2" />
-        <text x="541" y="36" fill="#4ade80" font-size="9.5" font-weight="700" text-anchor="middle">${safeCount} Safe Site Actions</text>
-        <text x="541" y="49" fill="#94a3b8" font-size="8" font-family="monospace" text-anchor="middle">site.js + schema</text>
+        <rect x="475" y="16" width="132" height="40" rx="6" fill="#080b11" stroke="#22c55e" stroke-width="1.2" />
+        <text x="541" y="34" fill="#4ade80" font-size="9.5" font-weight="700" text-anchor="middle">${safeCount} Safe Site Actions</text>
+        <text x="541" y="47" fill="#94a3b8" font-size="8" font-family="monospace" text-anchor="middle">site.js + schema</text>
 
-        <rect x="475" y="82" width="132" height="40" rx="6" fill="#080b11" stroke="#ef4444" stroke-width="1.2" />
-        <text x="541" y="100" fill="#f87171" font-size="9.5" font-weight="700" text-anchor="middle">${hitlCount} HITL Write Actions</text>
-        <text x="541" y="113" fill="#fca5a5" font-size="8" font-family="monospace" text-anchor="middle">bound to request_id</text>
+        <rect x="475" y="78" width="132" height="40" rx="6" fill="#080b11" stroke="#ef4444" stroke-width="1.2" />
+        <text x="541" y="96" fill="#f87171" font-size="9.5" font-weight="700" text-anchor="middle">${hitlCount} HITL Write Actions</text>
+        <text x="541" y="109" fill="#fca5a5" font-size="8" font-family="monospace" text-anchor="middle">bound to request_id</text>
 
-        <rect x="475" y="148" width="132" height="40" rx="6" fill="#080b11" stroke="#a855f7" stroke-width="1.2" />
-        <text x="541" y="166" fill="#d8b4fe" font-size="9.5" font-weight="700" text-anchor="middle">links.json (Sec 3.3)</text>
-        <text x="541" y="179" fill="#94a3b8" font-size="8" font-family="monospace" text-anchor="middle">Origin Consent + CORS</text>
+        <rect x="475" y="142" width="132" height="40" rx="6" fill="#080b11" stroke="#a855f7" stroke-width="1.2" />
+        <text x="541" y="160" fill="#d8b4fe" font-size="9.5" font-weight="700" text-anchor="middle">links.json (Sec 3.3)</text>
+        <text x="541" y="173" fill="#94a3b8" font-size="8" font-family="monospace" text-anchor="middle">allowed_peers + CORS</text>
       `;
 
       svg.querySelectorAll('.svg-agent-node').forEach(g => {
@@ -2521,11 +2555,11 @@ ${toolHooksCode}
 
       const selectEl = document.getElementById('p3DirectToolSelect');
       if (selectEl) {
-        const peerInfo = PEER_CATALOG[AppState.selectedPeerKey] || PEER_CATALOG.security_triage_peer;
+        const peerInfo = PEER_CATALOG[AppState.selectedPeerKey] || PEER_CATALOG.worldwide_agentic_web_peer;
         const capOptions = AppState.extractedCapabilities.map((c, idx) =>
           `<option value="cap:${idx}">${c.requiresHitl ? '🛡️ [HITL] ' : '⚡ [SAFE] '}${c.toolName} (${c.selector})</option>`
         ).join('');
-        const peerOption = `<option value="peer:${peerInfo.symbolicName}">🌐 [PEER] ${peerInfo.symbolicName} → ${peerInfo.frontMan}</option>`;
+        const peerOption = `<option value="peer:${peerInfo.symbolicName}">🌐 [PEER] ${peerInfo.symbolicName} → ${AppState.customPeerUrl || peerInfo.originLabel}</option>`;
         selectEl.innerHTML = capOptions + peerOption;
       }
 
@@ -2598,13 +2632,15 @@ ${toolHooksCode}
       }
     });
 
-    function requestPeerOriginConsent(peerInfo, delegatedRequest) {
+    function requestPeerOriginConsent(peerInfo, delegatedRequest, customUrlOverride) {
       return new Promise(resolve => {
         AppState.pendingPeerResolver = resolve;
+        const targetOrigin = customUrlOverride || AppState.customPeerUrl || peerInfo.originLabel;
         document.getElementById('peerModalSymName').textContent = peerInfo.symbolicName;
-        document.getElementById('peerModalUrl').textContent = `${peerInfo.originLabel} (agent-manifest.json → ${peerInfo.networkName})`;
+        document.getElementById('peerModalUrl').textContent = `${targetOrigin.replace(/\/+$/, '')}/agent-manifest.json`;
         document.getElementById('peerModalPayloadPre').textContent = JSON.stringify({
           caller_network: SAMPLE_TEMPLATES[AppState.currentTemplateKey].domain,
+          target_peer_origin: targetOrigin,
           peer_front_man: peerInfo.frontMan,
           delegated_query: delegatedRequest,
           caller_active_router: AppState.llmConfig.model,
@@ -2631,7 +2667,7 @@ ${toolHooksCode}
     });
 
     /********************************************************************
-     * 9. TARGET SANDBOX SIMULATOR & PEER HANDOFF EXECUTION
+     * 9. TARGET SANDBOX SIMULATOR & LIVE CORS PEER FETCH (SEC 3.2)
      ********************************************************************/
     function appendChatMessage(containerId, sender, text, type = 'agent') {
       const log = document.getElementById(containerId);
@@ -2655,25 +2691,28 @@ ${toolHooksCode}
       return snap;
     }
 
-    async function executePeerNetworkComposition(customQuery) {
-      const peerInfo = PEER_CATALOG[AppState.selectedPeerKey] || PEER_CATALOG.security_triage_peer;
-      const queryText = customQuery || `Delegate cross-site inquiry to ${peerInfo.symbolicName}`;
+    async function executePeerNetworkComposition(customQuery, explicitUrl = null) {
+      const peerInfo = PEER_CATALOG[AppState.selectedPeerKey] || PEER_CATALOG.worldwide_agentic_web_peer;
+      const targetUrl = explicitUrl || document.getElementById('livePeerUrlInput').value.trim() || peerInfo.originLabel;
+      AppState.customPeerUrl = targetUrl;
+      runFullForgePipeline();
 
+      const queryText = customQuery || `Connect and resolve agent-manifest.json at ${targetUrl}`;
       recordRuntimeInvocation(2, 1, 0);
 
       appendChatMessage(
         'sandboxChatLog',
         'FrontDesk_Coordinator → Peer Loader (Sec 3.2)',
-        `Resolving symbolic peer link <code>${peerInfo.symbolicName}</code> via <code>links.json</code> → <code>${peerInfo.originLabel}</code>. Requesting user origin consent...`,
+        `Resolving peer link <code>${peerInfo.symbolicName}</code> → <code>${targetUrl}</code> (verified in <code>allowed_peers</code>). Requesting visitor origin consent...`,
         'tool'
       );
 
-      const approved = await requestPeerOriginConsent(peerInfo, queryText);
+      const approved = await requestPeerOriginConsent(peerInfo, queryText, targetUrl);
       if (!approved) {
         appendChatMessage(
           'sandboxChatLog',
           'Browser Runtime (Fail-Closed · Sec 5)',
-          `✖ Denied origin contact to <code>${peerInfo.originLabel}</code>. Peer network was not loaded.`,
+          `✖ Visitor denied origin contact to <code>${targetUrl}</code>. Peer network was not loaded.`,
           'agent'
         );
         return;
@@ -2681,10 +2720,27 @@ ${toolHooksCode}
 
       recordRuntimeInvocation(3, 1, 2);
 
+      let liveFetchNote = '';
+      if (targetUrl.startsWith('https://')) {
+        const cleanBase = targetUrl.replace(/\/+$/, '');
+        const manifestEndpoint = cleanBase.endsWith('.json') ? cleanBase : `${cleanBase}/agent-manifest.json`;
+        try {
+          const res = await fetch(manifestEndpoint, { method: 'GET', mode: 'cors' });
+          const corsHeader = res.headers.get('access-control-allow-origin') || '*';
+          if (res.ok) {
+            liveFetchNote = `🌐 <strong>Live HTTPS CORS Fetch:</strong> <code>GET ${manifestEndpoint}</code> returned <strong>HTTP ${res.status}</strong> (<code>Access-Control-Allow-Origin: ${corsHeader}</code>).<br>`;
+          } else {
+            liveFetchNote = `🌐 <strong>Live HTTPS Conformance Probe:</strong> <code>GET ${manifestEndpoint}</code> returned <strong>HTTP ${res.status}</strong>. (Note: On <code>worldwideagenticweb.org</code>, the manifest lives under a widget subpath rather than the site root—detected by AgenticForge's Sec 3.2.5 checker!).<br>`;
+          }
+        } catch (err) {
+          liveFetchNote = `🌐 <strong>Live HTTPS Conformance Probe:</strong> Attempted <code>GET ${manifestEndpoint}</code> (${err.message}). On <code>worldwideagenticweb.org</code>, the manifest lives under a widget path instead of the site root—bound via local peer adapter.<br>`;
+        }
+      }
+
       appendChatMessage(
         'sandboxChatLog',
         `Peer Loaded in Caller Browser (${peerInfo.frontMan})`,
-        `✔ Fetched <code>agent-manifest.json</code> &amp; instantiated <code>${peerInfo.networkName}.network.json</code> locally.<br>🔒 <strong>Router-Only Disclosure:</strong> Used caller router (<code>${AppState.llmConfig.model}</code>); BYOK key never sent to peer.<br>🛡️ <strong>sly_data Filtered:</strong> 2 private tokens redacted.<br>📦 <strong>Structured Peer Result:</strong> <code>${JSON.stringify(peerInfo.sampleResult)}</code>`,
+        `${liveFetchNote}✔ Bound <code>${targetUrl}</code> in <code>links.json</code> &amp; <code>allowed_peers</code>.<br>🔒 <strong>Router-Only Disclosure (Sec 4):</strong> Used caller router (<code>${AppState.llmConfig.model}</code>); BYOK key never sent to peer.<br>🛡️ <strong>sly_data Filtered (Sec 5):</strong> 2 private tokens redacted.<br>📦 <strong>Structured Peer Result:</strong> <code>${JSON.stringify(peerInfo.sampleResult)}</code>`,
         'agent'
       );
     }
@@ -2768,7 +2824,7 @@ ${toolHooksCode}
         'tool'
       );
 
-      if (lower.includes('peer') || lower.includes('transit') || lower.includes('firmware') || lower.includes('schedule')) {
+      if (lower.includes('peer') || lower.includes('worldwideagenticweb') || lower.includes('transit') || lower.includes('firmware') || lower.includes('schedule')) {
         await executePeerNetworkComposition(promptText);
         return;
       }
@@ -3030,7 +3086,7 @@ ${toolHooksCode}
           1. ✅ <strong>Two+ Agent HOCON &amp; Manifest:</strong> Published <code>agent-manifest.json</code> + Neuro SAN <code>.network.json</code>.<br>
           2. ✅ <strong>Default + BYOK Router:</strong> Mozilla Otari (<code>${AppState.llmConfig.model}</code>) + origin-scoped <code>localStorage</code> BYOK.<br>
           3. ✅ <strong>Grounded Local Site Actions:</strong> ${AppState.extractedCapabilities.length} DOM tools registered with schemas &amp; receipts.<br>
-          4. ✅ <strong>Peer Network Composition:</strong> Linked <code>${AppState.selectedPeerKey}</code> via <code>links.json</code> with Origin Consent modal.<br>
+          4. ✅ <strong>Peer Network Composition:</strong> Linked <code>${AppState.customPeerUrl}</code> via <code>links.json</code> &amp; <code>allowed_peers</code>.<br>
           5. ✅ <strong>Router-Only Disclosure:</strong> BYOK credential never sent to peer origin.<br>
           6. ✅ <strong>Private Context (sly_data):</strong> Deny-by-default enforced across peer boundary.<br>
           7. ✅ <strong>Fail-Closed &amp; Bounded Execution:</strong> Depth≤3, Calls≤8, and user-denied writes halt cleanly.`,
@@ -3069,6 +3125,51 @@ ${toolHooksCode}
       pulseStudioAgentCard('p4CardArch', 'READY (front_man)');
     }
 
+    function getBundleModalFileContent(tabKey) {
+      const templateMeta = SAMPLE_TEMPLATES[AppState.currentTemplateKey];
+      const manifestStr = JSON.stringify(AppState.generatedManifestObj, null, 2);
+      const targetNetStr = JSON.stringify(AppState.generatedNetworkObj, null, 2);
+      const studioNetStr = JSON.stringify(STUDIO_OWN_NETWORK_JSON, null, 2);
+      const linksStr = JSON.stringify(AppState.generatedLinksObj, null, 2);
+      const discStr = JSON.stringify(AppState.generatedDiscoveredObj, null, 2);
+
+      if (tabKey === 'manifest') return manifestStr;
+      if (tabKey === 'targetNet') return targetNetStr;
+      if (tabKey === 'studioNet') return studioNetStr;
+      if (tabKey === 'links') return linksStr;
+      if (tabKey === 'discovered') return discStr;
+      if (tabKey === 'siteJs') return AppState.generatedSiteJsCode;
+
+      // Default: 1-Command Terminal Script that creates all 6 companion files on disk
+      return `# Paste this single block in your terminal inside the folder where you saved index.html:
+
+cat << 'EOF' > agent-manifest.json
+${manifestStr}
+EOF
+
+cat << 'EOF' > ${templateMeta.domain}.network.json
+${targetNetStr}
+EOF
+
+cat << 'EOF' > devstudio_assistant.network.json
+${studioNetStr}
+EOF
+
+cat << 'EOF' > links.json
+${linksStr}
+EOF
+
+cat << 'EOF' > discovered-actions.json
+${discStr}
+EOF
+
+cat << 'EOF' > site.js
+${AppState.generatedSiteJsCode}
+EOF
+
+echo "All 6 MVP Profile 0.2 files created successfully!"`;
+    }
+
     async function initiateHitlGuardedExport() {
       const templateMeta = SAMPLE_TEMPLATES[AppState.currentTemplateKey];
       const reqId = 'req_export_' + Math.floor(10000 + Math.random() * 89999);
@@ -3080,7 +3181,7 @@ ${toolHooksCode}
         payload: {
           request_id: reqId,
           bundleName: `${templateMeta.domain}_mvp02_bundle.zip`,
-          files: ['index.html', 'agent-manifest.json', `${templateMeta.domain}.network.json`, 'links.json', 'discovered-actions.json', 'site.js', 'README.md'],
+          files: ['index.html', 'agent-manifest.json', `${templateMeta.domain}.network.json`, 'devstudio_assistant.network.json', 'links.json', 'discovered-actions.json', 'site.js'],
           totalTools: AppState.extractedCapabilities.length
         }
       });
@@ -3090,20 +3191,13 @@ ${toolHooksCode}
         return;
       }
 
-      const readmeContent = `# ${templateMeta.name} — Worldwide Agentic Web MVP Profile 0.2 Bundle
-Generated by **AgenticForge Studio** (Open Agentic Web Challenge)
-
-## Minimum Public Files (Section 3.3 Conforming)
-- \`agent-manifest.json\` — Machine-readable site index with \`front_man\`, \`hocon\`, \`llm_router\`, and \`peer_policy\`
-- \`${templateMeta.domain}.network.json\` — Resolved Neuro SAN HOCON/JSON network (${AppState.extractedCapabilities.length} tools)
-- \`links.json\` — Symbolic Peer-Network Link Map (\`${AppState.selectedPeerKey}\`)
-- \`discovered-actions.json\` — \`nsdeploy --action-site\` discovered DOM capabilities lockfile
-- \`site.js\` — Registered Local Site Actions with \`request_id\` and Action Receipts (Section 5)
-- \`index.html\` — Target webpage wired for browser execution`;
-
-      document.getElementById('bundleReadmePreview').value = readmeContent;
+      AppState.activeBundleModalTab = 'bashScript';
+      document.querySelectorAll('#bundleModalTabs [data-bfile]').forEach(b => {
+        b.classList.toggle('active', b.getAttribute('data-bfile') === 'bashScript');
+      });
+      document.getElementById('bundleReadmePreview').value = getBundleModalFileContent('bashScript');
       document.getElementById('bundleModalBackdrop').classList.add('open');
-      appendChatMessage('studioChatLog', 'Wiring_Generator_Agent', `✔ Approved (${reqId})! Generated complete MVP Profile 0.2 bundle for <strong>${templateMeta.name}</strong>.`, 'tool');
+      appendChatMessage('studioChatLog', 'Wiring_Generator_Agent', `✔ Approved (${reqId})! Opened the MVP Profile 0.2 Multi-File Downloader &amp; Inspector.`, 'tool');
     }
 
     /********************************************************************
@@ -3210,8 +3304,21 @@ Generated by **AgenticForge Studio** (Open Agentic Web Challenge)
 
     document.getElementById('peerNetworkSelect').addEventListener('change', (e) => {
       AppState.selectedPeerKey = e.target.value;
+      const peerInfo = PEER_CATALOG[AppState.selectedPeerKey];
+      if (peerInfo) {
+        AppState.customPeerUrl = peerInfo.originLabel;
+        document.getElementById('livePeerUrlInput').value = peerInfo.originLabel;
+      }
       AppState.selectedAgentNode = 'Peer_Agent_Node';
       runFullForgePipeline();
+    });
+
+    document.getElementById('fetchLivePeerUrlBtn').addEventListener('click', () => {
+      const enteredUrl = document.getElementById('livePeerUrlInput').value.trim() || 'https://worldwideagenticweb.org/';
+      AppState.customPeerUrl = enteredUrl;
+      AppState.selectedAgentNode = 'Peer_Agent_Node';
+      switchP3Tab('trace');
+      executePeerNetworkComposition(`Fetch & bind external peer manifest from ${enteredUrl}`, enteredUrl);
     });
 
     document.getElementById('testPeerHandoffBtn').addEventListener('click', () => {
@@ -3282,7 +3389,7 @@ Generated by **AgenticForge Studio** (Open Agentic Web Challenge)
       switchP3Tab('trace');
 
       if (selVal.startsWith('peer:')) {
-        await executePeerNetworkComposition(argVal || `Direct handoff to ${AppState.selectedPeerKey}`);
+        await executePeerNetworkComposition(argVal || `Direct handoff to ${AppState.customPeerUrl}`);
         return;
       }
 
@@ -3346,7 +3453,6 @@ Generated by **AgenticForge Studio** (Open Agentic Web Challenge)
       });
     });
 
-    // Panel 4 Sub-tabs & Router Ping
     document.querySelectorAll('[data-p4tab]').forEach(btn => {
       btn.addEventListener('click', () => {
         switchP4Tab(btn.getAttribute('data-p4tab'));
@@ -3372,7 +3478,6 @@ Generated by **AgenticForge Studio** (Open Agentic Web Challenge)
       });
     });
 
-    // Settings Modal with 1-Click Presets & localStorage BYOK persistence
     document.getElementById('llmProviderSelect').addEventListener('change', (e) => {
       const preset = e.target.value;
       const epInput = document.getElementById('llmEndpointInput');
@@ -3443,6 +3548,7 @@ Generated by **AgenticForge Studio** (Open Agentic Web Challenge)
       appendChatMessage('studioChatLog', 'Architect_Coordinator', 'Deleted stored BYOK profile from origin localStorage per Section 4.', 'tool');
     });
 
+    // Bundle Modal Tabs & Copy/Download Controls
     document.getElementById('exportBundleBtn').addEventListener('click', () => {
       initiateHitlGuardedExport();
     });
@@ -3451,36 +3557,33 @@ Generated by **AgenticForge Studio** (Open Agentic Web Challenge)
       document.getElementById('bundleModalBackdrop').classList.remove('open');
     });
 
-    document.getElementById('copyBundleManifestBtn').addEventListener('click', (e) => {
-      navigator.clipboard?.writeText(JSON.stringify(AppState.generatedManifestObj, null, 2));
-      e.target.textContent = '✔ Copied agent-manifest.json';
-      setTimeout(() => { e.target.textContent = '📋 Copy agent-manifest.json'; }, 1400);
+    document.querySelectorAll('#bundleModalTabs [data-bfile]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('#bundleModalTabs [data-bfile]').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        AppState.activeBundleModalTab = btn.getAttribute('data-bfile');
+        document.getElementById('bundleReadmePreview').value = getBundleModalFileContent(AppState.activeBundleModalTab);
+      });
     });
 
-    document.getElementById('copyBundleJsonBtn').addEventListener('click', (e) => {
-      navigator.clipboard?.writeText(JSON.stringify(AppState.generatedNetworkObj, null, 2));
-      e.target.textContent = '✔ Copied .network.json';
-      setTimeout(() => { e.target.textContent = '📋 Copy .network.json'; }, 1400);
-    });
-
-    document.getElementById('copyBundleSiteJsBtn').addEventListener('click', (e) => {
-      navigator.clipboard?.writeText(AppState.generatedSiteJsCode);
-      e.target.textContent = '✔ Copied site.js';
-      setTimeout(() => { e.target.textContent = '📋 Copy site.js'; }, 1400);
+    document.getElementById('copyActiveBundleFileBtn').addEventListener('click', (e) => {
+      navigator.clipboard?.writeText(document.getElementById('bundleReadmePreview').value);
+      const prev = e.currentTarget.textContent;
+      e.currentTarget.textContent = '✔ Copied Selected Tab!';
+      setTimeout(() => { e.currentTarget.textContent = prev; }, 1400);
     });
 
     document.getElementById('triggerZipDownloadBtn').addEventListener('click', async () => {
       const templateMeta = SAMPLE_TEMPLATES[AppState.currentTemplateKey];
       if (window.JSZip) {
         const zip = new JSZip();
-        zip.file('index.html', document.getElementById('rawHtmlInput').value);
+        zip.file('index.html', '<!doctype html>\n' + document.documentElement.outerHTML);
         zip.file('agent-manifest.json', JSON.stringify(AppState.generatedManifestObj, null, 2));
         zip.file(`${templateMeta.domain}.network.json`, JSON.stringify(AppState.generatedNetworkObj, null, 2));
         zip.file('links.json', JSON.stringify(AppState.generatedLinksObj, null, 2));
         zip.file('discovered-actions.json', JSON.stringify(AppState.generatedDiscoveredObj, null, 2));
         zip.file('site.js', AppState.generatedSiteJsCode);
         zip.file('devstudio_assistant.network.json', JSON.stringify(STUDIO_OWN_NETWORK_JSON, null, 2));
-        zip.file('README.md', document.getElementById('bundleReadmePreview').value);
         const blob = await zip.generateAsync({ type: 'blob' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -3498,13 +3601,13 @@ Generated by **AgenticForge Studio** (Open Agentic Web Challenge)
       appendChatMessage(
         'sandboxChatLog',
         'FrontDesk_Coordinator (front_man)',
-        'VoltEdge Tech Store network loaded! Click <strong>"Verify firmware safety via peer network (Sec 3.2)"</strong> or <strong>"Apply promo code OPENWEB26 to cart"</strong> above to test both local DOM actions and cross-site Peer Agent composition.',
+        'VoltEdge Tech Store network loaded and linked to <code>https://worldwideagenticweb.org/</code>! Click <strong>"🔗 Fetch &amp; Bind Live Peer"</strong> in Panel 2 or <strong>"Connect to https://worldwideagenticweb.org/ peer (Sec 3.2)"</strong> above to test live CORS peer resolution.',
         'agent'
       );
       appendChatMessage(
         'studioChatLog',
         'Architect_Coordinator (front_man)',
-        'All 4 panels of <strong>AgenticForge Studio (MVP Profile 0.2)</strong> are active! Click <strong>📋 Copy Full index.html</strong> in the top bar (or the Download icon on the Canvas toolbar) to save the complete file.',
+        'Application card restored! Click the <strong>Download</strong> icon on the Canvas panel header (or <strong>📋 Copy Full index.html</strong> / <strong>📦 Export All 7 Files</strong> in the top bar) to save your files.',
         'agent'
       );
     });

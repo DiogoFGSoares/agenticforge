@@ -1,27 +1,24 @@
 {
   "manifest_version": "0.2",
-  "site_name": "AgenticForge Studio — Meta-IDE for the Open Agentic Web",
+  "site_name": "VoltEdge Tech Store — Open Agentic Website",
   "generated_by": "AgenticForge Studio (Worldwide Agentic Web MVP Profile 0.2)",
   "llm_router": {
     "provider": "otari",
     "default_model": "alibaba/qwen-3.5-35b-a3b",
-    "router_profile": "https://api.otari.ai/api/v1/chat/completions",
+    "router_profile": "otari-gateway:/api/v1/chat/completions",
     "byok_supported": true
   },
   "peer_policy": {
     "allow_cross_origin_peers": true,
+    "allowed_peers": [
+      "https://worldwideagenticweb.org",
+      "https://worldwideagenticweb.org/"
+    ],
     "require_user_consent": true,
     "router_only_disclosure": true,
     "sly_data_default": "deny"
   },
   "networks": [
-    {
-      "name": "devstudio_assistant",
-      "front_man": "Architect_Coordinator",
-      "hocon": "./devstudio_assistant.network.json",
-      "links": "./links.json",
-      "description": "4-agent Meta-IDE network that inspects DOM trees, computes risk scores, and synthesizes Neuro SAN networks."
-    },
     {
       "name": "voltedge_hardware_store",
       "front_man": "FrontDesk_Coordinator",

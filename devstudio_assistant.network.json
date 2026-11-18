@@ -1,6 +1,5 @@
 {
   "metadata": {
-    "network_name": "devstudio_assistant",
     "description": "AgenticForge Meta-IDE 4-agent network conforming to Cognizant AI Lab Neuro SAN & Worldwide Agentic Web MVP Profile 0.2",
     "front_man": "Architect_Coordinator",
     "execution_limits": {
