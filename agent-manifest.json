@@ -5,7 +5,7 @@
   "llm_router": {
     "provider": "otari",
     "default_model": "alibaba/qwen-3.5-35b-a3b",
-    "router_profile": "otari-gateway:/api/v1/chat/completions",
+    "router_profile": "configuration_required",
     "byok_supported": true
   },
   "peer_policy": {

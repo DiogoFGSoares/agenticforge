@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>AgenticForge — Meta-IDE &amp; Scaffolder for the Open Agentic Web (MVP Profile 0.2)</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <script type="module" src="./runtime/bootstrap.mjs"></script>
   <style>
     :root {
       --bg: #0b0f17;
@@ -411,6 +412,36 @@
       max-height: 255px;
       overflow-y: auto;
       position: relative;
+    }
+
+    .preview-trust-label {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 8px;
+      padding: 5px 7px;
+      border-radius: 5px;
+      background: #e0f2fe;
+      color: #075985;
+      font-size: 10.5px;
+      font-weight: 700;
+    }
+
+    .preview-trust-label.untrusted {
+      background: #fff7ed;
+      color: #9a3412;
+    }
+
+    .untrusted-preview-host,
+    .untrusted-preview-frame {
+      width: 100%;
+      min-height: 195px;
+      border: 0;
+      background: #f8fafc;
+    }
+
+    .untrusted-preview-frame {
+      display: block;
     }
 
     .target-preview-container.highlight-nodes [data-af-node="safe"] {
@@ -980,7 +1011,7 @@
           AgenticForge
           <span class="badge">Open Agentic Web Meta-IDE</span>
           <span class="badge badge-success">MVP Profile 0.2 Conforming</span>
-          <span class="badge badge-orange" id="llmModeBadge">Router: Mozilla Otari + BYOK Ready</span>
+          <span class="badge badge-orange" id="llmModeBadge">LLM Router: Configuration Required</span>
         </div>
         <div class="brand-subtitle">Turn any static HTML page into a Neuro SAN + nsdeploy Open Agentic Website (agent-manifest.json + .network.json + links.json + site.js)</div>
       </div>
@@ -996,7 +1027,7 @@
     <div class="topbar-actions">
       <button type="button" class="btn btn-secondary" id="copyFullAppHtmlBtn" title="Copy the complete index.html source to your clipboard">📋 Copy Full index.html</button>
       <button type="button" class="btn btn-secondary" id="openLlmSettingsBtn">⚙️ LLM Router &amp; BYOK</button>
-      <button type="button" class="btn btn-accent" id="exportBundleBtn">📦 Export All 7 Files / .zip</button>
+      <button type="button" class="btn btn-accent" id="exportBundleBtn">📦 Export All 12 Files / .zip</button>
     </div>
   </header>
 
@@ -1060,7 +1091,47 @@
         </div>
 
         <!-- Target Visual Preview -->
-        <div id="targetPreviewWrap" class="target-preview-container highlight-nodes"></div>
+        <div id="targetPreviewWrap" class="target-preview-container highlight-nodes">
+          <section id="authorizedVoltEdgePanel">
+            <div class="preview-trust-label">
+              <span>Trusted boundary: authorized VoltEdge demonstration</span>
+              <span>DOM available to declarative runtime</span>
+            </div>
+            <div id="authorizedVoltEdgeHost">
+              <div class="store-portal" id="techStoreRoot">
+                <h3>💻 VoltEdge Hardware — Agentic Order Desk</h3>
+                <p>Configure developer workstations and open-source AI inference hardware.</p>
+                <form id="hardwareOrderForm">
+                  <label for="productSelect">Hardware SKU</label>
+                  <select id="productSelect" name="sku" data-state-bind="cart.sku">
+                    <option value="Otari Local Router Box ($299)">Otari Local Router Box ($299)</option>
+                    <option value="AI Workstation GPU 24GB ($1,199)">AI Workstation GPU 24GB ($1,199)</option>
+                    <option value="Zero-Trust Hardware Security Key ($59)">Zero-Trust Hardware Security Key ($59)</option>
+                  </select>
+
+                  <label for="quantityInput">Unit Quantity</label>
+                  <input type="number" id="quantityInput" name="quantity" value="1" min="1" max="20" data-state-bind="cart.quantity">
+
+                  <label for="promoCodeInput">Discount / Partner Code</label>
+                  <input type="text" id="promoCodeInput" name="promoCode" placeholder="e.g. OPENWEB26" value="" data-state-bind="cart.promo">
+
+                  <button type="button" id="recalcCartBtn" data-action="recalculate_quote">Update Cart Quote</button>
+                  <button type="submit" id="checkoutOrderBtn" data-critical="submit_purchase_checkout">Authorize &amp; Place Order</button>
+                </form>
+                <div class="preview-state-banner" id="livePreviewStatus">
+                  Cart: 1x Otari Local Router Box ($299) | Promo: None | Total: $299.00
+                </div>
+              </div>
+            </div>
+          </section>
+          <section id="untrustedPreviewPanel" hidden>
+            <div class="preview-trust-label untrusted">
+              <span>Untrusted imported HTML preview</span>
+              <span>Opaque sandbox · scripts/network disabled</span>
+            </div>
+            <div id="untrustedPreviewHost" class="untrusted-preview-host"></div>
+          </section>
+        </div>
 
         <!-- Raw HTML Source Editor (hidden when preview tab is active) -->
         <textarea id="rawHtmlInput" class="code-area" style="display:none;" spellcheck="false" aria-label="Target HTML source code"></textarea>
@@ -1125,7 +1196,7 @@
       <div class="panel-header">
         <h2 class="panel-title" id="panel2Title">🕸️ 2. Neuro SAN Topology &amp; MVP 0.2 Public Artifacts</h2>
         <div style="display:flex; gap:6px; align-items:center;">
-          <span class="badge badge-success" id="specComplianceBadge">MVP Profile 0.2: 7/7 Checks</span>
+          <span class="badge badge-orange" id="specComplianceBadge">MVP Profile 0.2: Implementation In Progress</span>
           <button type="button" class="btn btn-secondary btn-sm" id="copyCodeBtn">📋 Copy Active File</button>
         </div>
       </div>
@@ -1337,7 +1408,7 @@
           <!-- Panel 4 Sub-tabs: Copilot Chat vs Sec 6 Scorecard vs Otari & BYOK Diagnostics -->
           <div class="subtabs" role="tablist">
             <button type="button" class="subtab active" data-p4tab="chat">💬 Studio Copilot</button>
-            <button type="button" class="subtab" data-p4tab="matrix">✅ Sec 6 Scorecard (7/7)</button>
+            <button type="button" class="subtab" data-p4tab="matrix">📋 Sec 6 Progress</button>
             <button type="button" class="subtab" data-p4tab="otari">🔑 Otari &amp; BYOK Diagnostics</button>
           </div>
 
@@ -1380,7 +1451,7 @@
           <div class="p3-subpanel" id="p4OtariSubpanel">
             <div class="math-breakdown-row">
               <span><strong>Active Router Profile:</strong> <code id="p4DiagRouter" style="color:var(--brand);">mozilla-otari</code></span>
-              <span class="badge badge-success" id="p4DiagModeBadge">Zero-Key Engine + BYOK Ready</span>
+              <span class="badge badge-orange" id="p4DiagModeBadge">Inference Configuration Required</span>
             </div>
             <div class="math-breakdown-row">
               <span><strong>Selected Model:</strong> <code id="p4DiagModel" style="color:var(--accent);">alibaba/qwen-3.5-35b-a3b</code></span>
@@ -1388,7 +1459,7 @@
             </div>
             <div style="font-size:11px; color:var(--muted); line-height:1.45; background:#05070b; padding:7px 9px; border-radius:5px; border:1px solid var(--border-subtle);">
               <strong style="color:var(--ink);">📌 Official Hackathon LLM Notes (Tenet 3):</strong><br>
-              • <strong>Mozilla Otari (Optional):</strong> Recommended model is <code>alibaba/qwen-3.5-35b-a3b</code> (avoids the 40,960 context limit error on 14b/30b models) with endpoint ending in <code>/api/v1</code>.<br>
+              • <strong>Mozilla Otari (Optional):</strong> Configure an operational OpenAI-compatible Chat Completions endpoint from the official Otari documentation; AgenticForge does not invent one.<br>
               • <strong>Free OpenAI-Compatible BYOK:</strong> Works with OpenRouter (<code>:free</code> models), Google Gemini AI Studio, Groq, Local Ollama, or zero-key deterministic mode.
             </div>
           </div>
@@ -1485,20 +1556,20 @@
       </div>
       <div class="modal-body">
         <p style="margin:0; color:var(--muted); font-size:12px;">
-          Per <strong>Tenet Three (Sec 4)</strong>, the agent graph is independent of the inference service. Profiles are stored in origin-scoped <code>localStorage</code> and never disclosed to peer sites.
+          Per <strong>Tenet Three (Sec 4)</strong>, the agent graph is independent of the inference service. Only non-secret profile metadata is stored in <code>localStorage</code>; the BYOK credential remains in memory and is never disclosed to peer sites.
         </p>
         <div class="form-field">
           <label for="llmProviderSelect">LLM Router Preset (1-Click Auto-Fill)</label>
           <select id="llmProviderSelect">
-            <option value="otari">Mozilla Otari Hosted (/api/v1 · alibaba/qwen-3.5-35b-a3b)</option>
-            <option value="otari_local">Mozilla Otari Local + Ollama (Zero-Key · gemma4:e4b)</option>
+            <option value="otari">Mozilla Otari (explicit endpoint required)</option>
+            <option value="otari_local">Mozilla Otari Local + Ollama (explicit loopback endpoint required)</option>
             <option value="openrouter">OpenRouter / Groq / Gemini Free OpenAI-Compatible BYOK</option>
-            <option value="deterministic">Built-in Deterministic Browser Engine (Zero-Key Instant Demo)</option>
+            <option value="deterministic">Deterministic visual simulation only (not LLM inference)</option>
           </select>
         </div>
         <div class="form-field">
-          <label for="llmEndpointInput">Router Base Route / Identifier (Note: Otari uses /api/v1)</label>
-          <input type="text" id="llmEndpointInput" value="otari-gateway:/api/v1/chat/completions">
+          <label for="llmEndpointInput">OpenAI-Compatible Chat Completions Endpoint</label>
+          <input type="url" id="llmEndpointInput" value="" placeholder="https://router.example/v1/chat/completions">
         </div>
         <div class="form-field">
           <label for="llmModelInput">Recommended Model Name</label>
@@ -1741,7 +1812,14 @@
         {
           name: "Architect_Coordinator",
           function: {
-            description: "Front agent for AgenticForge Studio. Understands developer requests and delegates DOM scanning, Neuro SAN topology generation, and safe action wiring."
+            description: "Front agent for AgenticForge Studio. Understands developer requests and delegates DOM scanning, Neuro SAN topology generation, and safe action wiring.",
+            parameters: {
+              type: "object",
+              properties: {
+                inquiry: { type: "string", description: "Developer request for the AgenticForge Studio." }
+              },
+              required: ["inquiry"]
+            }
           },
           instructions: "Understand the developer's request, inspect the current studio state, and delegate tasks to DOM_Scanner_Agent, Topology_Builder_Agent, or Wiring_Generator_Agent.",
           tools: [
@@ -1755,7 +1833,14 @@
         {
           name: "DOM_Scanner_Agent",
           function: {
-            description: "Parses target HTML via DOMParser and computes Actionability A(e_i) and Mutation Risk R(e_i)."
+            description: "Parses target HTML via DOMParser and computes Actionability A(e_i) and Mutation Risk R(e_i).",
+            parameters: {
+              type: "object",
+              properties: {
+                inquiry: { type: "string", description: "DOM inspection request." }
+              },
+              required: ["inquiry"]
+            }
           },
           instructions: "Use only grounded DOM inspection results. Flag any element where R(e_i) >= tau_HITL as requiring mandatory user-owned confirmation.",
           tools: [
@@ -1766,7 +1851,14 @@
         {
           name: "Topology_Builder_Agent",
           function: {
-            description: "Synthesizes the target site's Neuro SAN .network.json, agent-manifest.json, and links.json artifacts."
+            description: "Synthesizes the target site's Neuro SAN .network.json, agent-manifest.json, and links.json artifacts.",
+            parameters: {
+              type: "object",
+              properties: {
+                inquiry: { type: "string", description: "Topology generation request." }
+              },
+              required: ["inquiry"]
+            }
           },
           instructions: "Generate valid Neuro SAN HOCON/JSON network definitions with explicit front_man, invocation schemas, and sly_data isolation rules.",
           tools: [
@@ -1777,7 +1869,14 @@
         {
           name: "Wiring_Generator_Agent",
           function: {
-            description: "Registers browser-local site actions in site.js and binds write operations to user-owned HITL confirmation receipts."
+            description: "Registers browser-local site actions in site.js and binds write operations to user-owned HITL confirmation receipts.",
+            parameters: {
+              type: "object",
+              properties: {
+                inquiry: { type: "string", description: "Action wiring or export request." }
+              },
+              required: ["inquiry"]
+            }
           },
           instructions: "Ensure every write or high-risk DOM mutation is registered with an input schema, effect classification, request identifier, and user confirmation modal.",
           tools: [
@@ -1802,6 +1901,9 @@
       activeCodeTab: 'manifestJson',
       activeBundleModalTab: 'bashScript',
       topologyMode: 'target',
+      previewTrust: 'authorized-voltedge',
+      preparedPreview: null,
+      authorizedPreviewBound: false,
       extractedCapabilities: [],
       generatedManifestObj: null,
       generatedNetworkObj: null,
@@ -1810,9 +1912,10 @@
       generatedSiteJsCode: '',
       llmConfig: {
         provider: 'otari',
-        endpoint: 'otari-gateway:/api/v1/chat/completions',
+        endpoint: '',
         model: 'alibaba/qwen-3.5-35b-a3b',
-        apiKey: ''
+        apiKey: '',
+        requiresApiKey: false
       },
       sandboxStats: {
         depth: 0,
@@ -1831,9 +1934,34 @@
       return 1 / (1 + Math.exp(-x));
     }
 
-    function parseAndScoreTargetDOM(rawHtml, tauHitl) {
+    function escapePrivilegedHtml(value) {
+      return String(value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function getAuthorizedVoltEdgeRootForSimulation() {
+      if (AppState.previewTrust !== 'authorized-voltedge') return null;
+      return document.querySelector('#authorizedVoltEdgeHost > #techStoreRoot');
+    }
+
+    function resetAuthorizedVoltEdgeDemo() {
+      const root = document.querySelector('#authorizedVoltEdgeHost > #techStoreRoot');
+      if (!root) return;
+      root.querySelector('#productSelect').value = 'Otari Local Router Box ($299)';
+      root.querySelector('#quantityInput').value = '1';
+      root.querySelector('#promoCodeInput').value = '';
+      const banner = root.querySelector('#livePreviewStatus');
+      banner.removeAttribute('style');
+      banner.textContent = 'Cart: 1x Otari Local Router Box ($299) | Promo: None | Total: $299.00';
+    }
+
+    function parseAndScoreTargetDOM(sanitizedHtml, tauHitl) {
       const parser = new DOMParser();
-      const doc = parser.parseFromString(rawHtml, 'text/html');
+      const doc = parser.parseFromString(sanitizedHtml, 'text/html');
       const interactiveNodes = doc.querySelectorAll('input, select, textarea, button, form');
       const capabilities = [];
 
@@ -1845,7 +1973,9 @@
 
         const id = node.getAttribute('id') || `${tag}_${idx + 1}`;
         const nameAttr = node.getAttribute('name') || '';
-        const labelEl = id ? doc.querySelector(`label[for="${id}"]`) : null;
+        const labelEl = id
+          ? Array.from(doc.querySelectorAll('label[for]')).find(label => label.getAttribute('for') === id) || null
+          : null;
         const labelText = (labelEl ? labelEl.textContent : (node.textContent || node.getAttribute('placeholder') || id)).trim();
         const typeAttr = (node.getAttribute('type') || '').toLowerCase();
         const dataBind = node.getAttribute('data-state-bind') || '';
@@ -1933,7 +2063,7 @@
         llm_router: {
           provider: AppState.llmConfig.provider,
           default_model: AppState.llmConfig.model,
-          router_profile: AppState.llmConfig.endpoint,
+          router_profile: AppState.llmConfig.endpoint || "configuration_required",
           byok_supported: true
         },
         peer_policy: {
@@ -1979,7 +2109,14 @@
           {
             name: "FrontDesk_Coordinator",
             function: {
-              description: `Public Front Man entry point for ${templateMeta.name}. Grounds user requests against live DOM state and delegates to internal specialists or approved peer networks.`
+              description: `Public Front Man entry point for ${templateMeta.name}. Grounds user requests against live DOM state and delegates to internal specialists or approved peer networks.`,
+              parameters: {
+                type: "object",
+                properties: {
+                  inquiry: { type: "string", description: "User request for the target website." }
+                },
+                required: ["inquiry"]
+              }
             },
             instructions: `Always call getPageState first. Delegate non-destructive form updates (R < ${tauHitl}) to State_Form_Specialist, high-risk writes (R >= ${tauHitl}) to Critical_Action_Specialist, and cross-site inquiries to ${peerInfo.symbolicName} (${resolvedPeerOrigin}).`,
             tools: [
@@ -1992,15 +2129,29 @@
           {
             name: "State_Form_Specialist",
             function: {
-              description: "Executes safe, reversible DOM form updates and queries."
+              description: "Executes safe, reversible DOM form updates and queries.",
+              parameters: {
+                type: "object",
+                properties: {
+                  inquiry: { type: "string", description: "Safe site action request." }
+                },
+                required: ["inquiry"]
+              }
             },
             instructions: `Operate only on registered site actions whose Mutation Risk Score R(e_i) is below tau_HITL (${tauHitl}).`,
-            tools: readTools
+            tools: ["getPageState", ...readTools]
           },
           {
             name: "Critical_Action_Specialist",
             function: {
-              description: "Proposes irreversible or high-risk DOM mutations that require user-owned runtime confirmation."
+              description: "Proposes irreversible or high-risk DOM mutations that require user-owned runtime confirmation.",
+              parameters: {
+                type: "object",
+                properties: {
+                  inquiry: { type: "string", description: "High-risk site action request." }
+                },
+                required: ["inquiry"]
+              }
             },
             instructions: "Propose validated action arguments and wait for the browser runtime to obtain explicit human approval and issue a signed action receipt.",
             tools: criticalTools
@@ -2040,34 +2191,37 @@
       };
 
       const toolHooksCode = capabilities.map(cap => {
+        const toolNameLiteral = JSON.stringify(cap.toolName);
+        const labelLiteral = JSON.stringify(cap.label);
+        const selectorLiteral = JSON.stringify(cap.selector);
         if (cap.requiresHitl) {
           return `  // [IRREVERSIBLE / HIGH-RISK WRITE] A(e_i)=${cap.actionability} | R(e_i)=${cap.riskScore} >= ${tauHitl}
-  ${cap.toolName}: {
-    name: "${cap.toolName}",
-    purpose: "${cap.label}",
+  [${toolNameLiteral}]: {
+    name: ${toolNameLiteral},
+    purpose: ${labelLiteral},
     effect: "irreversible_write",
     requiresConfirmation: true,
     handler: async function(params = {}) {
       const requestId = "req_af_" + Math.floor(10000 + Math.random() * 89999);
       const approved = await window.AgenticForgeHITL.requestConfirmation({
         requestId: requestId,
-        toolName: "${cap.toolName}",
+        toolName: ${toolNameLiteral},
         agentName: "Critical_Action_Specialist",
         riskScore: ${cap.riskScore},
-        selector: "${cap.selector}",
+        selector: ${selectorLiteral},
         payload: params
       });
       if (!approved) {
-        return { status: "fail_closed_user_denied", request_id: requestId, selector: "${cap.selector}" };
+        return { status: "fail_closed_user_denied", request_id: requestId, selector: ${selectorLiteral} };
       }
-      const el = document.querySelector("${cap.selector}");
+      const el = document.querySelector(${selectorLiteral});
       if (el) el.click();
       return {
         status: "verified_business_outcome",
         action_receipt: {
           request_id: requestId,
           origin: window.location.origin || "caller://sandbox",
-          executed_action: "${cap.toolName}",
+          executed_action: ${toolNameLiteral},
           timestamp: new Date().toISOString()
         },
         snapshot: window.getPageState()
@@ -2076,14 +2230,14 @@
   }`;
         } else {
           return `  // [SAFE SITE ACTION] A(e_i)=${cap.actionability} | R(e_i)=${cap.riskScore} < ${tauHitl}
-  ${cap.toolName}: {
-    name: "${cap.toolName}",
-    purpose: "${cap.label}",
+  [${toolNameLiteral}]: {
+    name: ${toolNameLiteral},
+    purpose: ${labelLiteral},
     effect: "${cap.opType === 'READ/QUERY' ? 'read_only' : 'reversible_write'}",
     requiresConfirmation: false,
     handler: async function(value) {
-      const el = document.querySelector("${cap.selector}");
-      if (!el) return { status: "error_not_found", selector: "${cap.selector}" };
+      const el = document.querySelector(${selectorLiteral});
+      if (!el) return { status: "error_not_found", selector: ${selectorLiteral} };
       if ("${cap.tag}" !== "button" && value !== undefined) {
         el.value = value;
         el.dispatchEvent(new Event("input", { bubbles: true }));
@@ -2091,7 +2245,7 @@
       } else {
         el.click();
       }
-      return { status: "ok", action: "${cap.toolName}", snapshot: window.getPageState() };
+      return { status: "ok", action: ${toolNameLiteral}, snapshot: window.getPageState() };
     }
   }`;
         }
@@ -2144,7 +2298,8 @@ ${toolHooksCode}
     }
 
     function updatePreviewBannerState() {
-      const previewWrap = document.getElementById('targetPreviewWrap');
+      const previewWrap = getAuthorizedVoltEdgeRootForSimulation();
+      if (!previewWrap) return;
       const banner = previewWrap.querySelector('#livePreviewStatus');
       if (!banner) return;
 
@@ -2203,21 +2358,37 @@ ${toolHooksCode}
         r.classList.toggle('selected-cap-row', parseInt(r.getAttribute('data-toolidx'), 10) === AppState.selectedCapIndex);
       });
 
-      const previewWrap = document.getElementById('targetPreviewWrap');
+      const previewWrap = getAuthorizedVoltEdgeRootForSimulation();
+      if (!previewWrap) return;
       previewWrap.querySelectorAll('[data-af-focused]').forEach(el => el.removeAttribute('data-af-focused'));
-      const targetEl = previewWrap.querySelector(cap.selector);
+      let targetEl = null;
+      try { targetEl = previewWrap.querySelector(cap.selector); } catch (error) {}
       if (targetEl) targetEl.setAttribute('data-af-focused', 'true');
     }
 
     function renderTargetPreviewAndBindEvents() {
-      const previewWrap = document.getElementById('targetPreviewWrap');
-      const rawHtml = document.getElementById('rawHtmlInput').value;
-      previewWrap.innerHTML = rawHtml;
+      const authorizedPanel = document.getElementById('authorizedVoltEdgePanel');
+      const untrustedPanel = document.getElementById('untrustedPreviewPanel');
+      const authorizedRoot = document.querySelector('#authorizedVoltEdgeHost > #techStoreRoot');
+      const showAuthorized = AppState.previewTrust === 'authorized-voltedge';
+      authorizedPanel.hidden = !showAuthorized;
+      untrustedPanel.hidden = showAuthorized;
 
-      previewWrap.querySelectorAll('input, select, textarea, button').forEach((el, idx) => {
+      if (!showAuthorized) {
+        const safePreview = window.AgenticForgeSafePreview;
+        if (!safePreview || !AppState.preparedPreview) {
+          throw new Error('Safe preview boundary is not initialized.');
+        }
+        safePreview.render(document.getElementById('untrustedPreviewHost'), AppState.preparedPreview);
+        return;
+      }
+
+      authorizedRoot.querySelectorAll('input, select, textarea, button').forEach((el, idx) => {
         const cap = AppState.extractedCapabilities.find(c => c.selector === `#${el.id}`) || AppState.extractedCapabilities[idx];
         const isHitl = cap ? cap.requiresHitl : false;
         el.setAttribute('data-af-node', isHitl ? 'hitl' : 'safe');
+
+        if (AppState.authorizedPreviewBound) return;
 
         const inspectThisNode = () => {
           const foundIdx = AppState.extractedCapabilities.findIndex(c => c.selector === `#${el.id}`);
@@ -2227,15 +2398,21 @@ ${toolHooksCode}
         el.addEventListener('focus', inspectThisNode);
       });
 
-      previewWrap.querySelectorAll('input, select, textarea').forEach(el => {
+      if (AppState.authorizedPreviewBound) {
+        updatePreviewBannerState();
+        return;
+      }
+
+      authorizedRoot.querySelector('#hardwareOrderForm').addEventListener('submit', event => event.preventDefault());
+      authorizedRoot.querySelectorAll('input, select, textarea').forEach(el => {
         el.addEventListener('input', updatePreviewBannerState);
         el.addEventListener('change', updatePreviewBannerState);
       });
 
-      previewWrap.querySelectorAll('button').forEach(btn => {
+      authorizedRoot.querySelectorAll('button').forEach(btn => {
         btn.addEventListener('click', () => {
           updatePreviewBannerState();
-          const banner = previewWrap.querySelector('#livePreviewStatus');
+          const banner = authorizedRoot.querySelector('#livePreviewStatus');
           if (banner) {
             const currentSummary = banner.textContent;
             banner.style.background = '#dcfce7';
@@ -2246,6 +2423,7 @@ ${toolHooksCode}
         });
       });
 
+      AppState.authorizedPreviewBound = true;
       updatePreviewBannerState();
     }
 
@@ -2276,15 +2454,19 @@ ${toolHooksCode}
       }
 
       tbody.innerHTML = filteredCaps.map(cap => {
+        const safeToolName = escapePrivilegedHtml(cap.toolName);
+        const safeLabel = escapePrivilegedHtml(cap.label);
+        const safeSelector = escapePrivilegedHtml(cap.selector);
+        const safeOpType = escapePrivilegedHtml(cap.opType);
         const riskBadge = cap.requiresHitl
           ? `<span class="badge badge-danger">HITL Guard (≥${AppState.hitlThreshold})</span>`
           : `<span class="badge badge-success">Auto-Safe</span>`;
         const isSelected = (cap.index - 1) === AppState.selectedCapIndex;
 
-        return `<tr class="${isSelected ? 'selected-cap-row' : ''}" style="cursor:pointer;" data-toolidx="${cap.index - 1}" title="Hover to inspect math · Click to execute ${cap.toolName} in Sandbox">
-          <td><strong style="color:var(--ink);">${cap.toolName}</strong><br><span style="font-size:10.5px; color:var(--muted);">${cap.label}</span></td>
-          <td><code class="selector-code">${cap.selector}</code></td>
-          <td><span style="font-size:10.5px; color:var(--muted);">${cap.opType}</span></td>
+        return `<tr class="${isSelected ? 'selected-cap-row' : ''}" style="cursor:pointer;" data-toolidx="${cap.index - 1}" title="Hover to inspect math · Click to execute ${safeToolName} in Sandbox">
+          <td><strong style="color:var(--ink);">${safeToolName}</strong><br><span style="font-size:10.5px; color:var(--muted);">${safeLabel}</span></td>
+          <td><code class="selector-code">${safeSelector}</code></td>
+          <td><span style="font-size:10.5px; color:var(--muted);">${safeOpType}</span></td>
           <td class="num-col">${cap.actionability.toFixed(2)}</td>
           <td class="num-col" style="font-weight:700; color:${cap.requiresHitl ? '#f87171' : '#4ade80'};">${cap.riskScore.toFixed(2)}</td>
           <td>${riskBadge}</td>
@@ -2556,11 +2738,17 @@ ${toolHooksCode}
       const selectEl = document.getElementById('p3DirectToolSelect');
       if (selectEl) {
         const peerInfo = PEER_CATALOG[AppState.selectedPeerKey] || PEER_CATALOG.worldwide_agentic_web_peer;
-        const capOptions = AppState.extractedCapabilities.map((c, idx) =>
-          `<option value="cap:${idx}">${c.requiresHitl ? '🛡️ [HITL] ' : '⚡ [SAFE] '}${c.toolName} (${c.selector})</option>`
-        ).join('');
-        const peerOption = `<option value="peer:${peerInfo.symbolicName}">🌐 [PEER] ${peerInfo.symbolicName} → ${AppState.customPeerUrl || peerInfo.originLabel}</option>`;
-        selectEl.innerHTML = capOptions + peerOption;
+        selectEl.replaceChildren();
+        AppState.extractedCapabilities.forEach((capability, index) => {
+          const option = document.createElement('option');
+          option.value = `cap:${index}`;
+          option.textContent = `${capability.requiresHitl ? '🛡️ [HITL] ' : '⚡ [SAFE] '}${capability.toolName} (${capability.selector})`;
+          selectEl.appendChild(option);
+        });
+        const peerOption = document.createElement('option');
+        peerOption.value = `peer:${peerInfo.symbolicName}`;
+        peerOption.textContent = `🌐 [PEER] ${peerInfo.symbolicName} → ${AppState.customPeerUrl || peerInfo.originLabel}`;
+        selectEl.appendChild(peerOption);
       }
 
       updatePanel3TelemetryUI();
@@ -2572,9 +2760,12 @@ ${toolHooksCode}
     function runFullForgePipeline() {
       const rawHtml = document.getElementById('rawHtmlInput').value;
       const templateMeta = SAMPLE_TEMPLATES[AppState.currentTemplateKey];
+      const safePreview = window.AgenticForgeSafePreview;
+      if (!safePreview) throw new Error('Safe preview boundary is unavailable.');
+      AppState.preparedPreview = safePreview.prepare(rawHtml);
 
       pulseStudioAgentCard('p4CardScan', 'SCANNED (' + AppState.extractedCapabilities.length + ')');
-      AppState.extractedCapabilities = parseAndScoreTargetDOM(rawHtml, AppState.hitlThreshold);
+      AppState.extractedCapabilities = parseAndScoreTargetDOM(AppState.preparedPreview.sanitizedHtml, AppState.hitlThreshold);
       renderTargetPreviewAndBindEvents();
 
       pulseStudioAgentCard('p4CardTopo', 'HOCON OK');
@@ -2673,14 +2864,37 @@ ${toolHooksCode}
       const log = document.getElementById(containerId);
       const div = document.createElement('div');
       div.className = `msg msg-${type}`;
-      div.innerHTML = `<span class="msg-sender">${sender}</span>${text}`;
+      const senderElement = document.createElement('span');
+      senderElement.className = 'msg-sender';
+      senderElement.textContent = String(sender);
+      div.appendChild(senderElement);
+
+      if (type === 'user') {
+        div.appendChild(document.createTextNode(String(text)));
+      } else {
+        const template = document.createElement('template');
+        template.innerHTML = String(text);
+        const allowedFormatting = new Set(['BR', 'CODE', 'EM', 'SPAN', 'STRONG']);
+        template.content.querySelectorAll('*').forEach(element => {
+          if (!allowedFormatting.has(element.tagName)) {
+            element.replaceWith(document.createTextNode(element.textContent || ''));
+            return;
+          }
+          [...element.attributes].forEach(attribute => element.removeAttribute(attribute.name));
+        });
+        div.appendChild(template.content.cloneNode(true));
+      }
       log.appendChild(div);
       log.scrollTop = log.scrollHeight;
     }
 
     function getLivePreviewSnapshot() {
-      const previewWrap = document.getElementById('targetPreviewWrap');
+      const previewWrap = getAuthorizedVoltEdgeRootForSimulation();
       const snap = {};
+      if (!previewWrap) {
+        snap._statusBanner = 'Untrusted preview is isolated; no privileged DOM snapshot is available.';
+        return snap;
+      }
       previewWrap.querySelectorAll('input, select, textarea').forEach(el => {
         snap[el.id || el.name] = el.value;
       });
@@ -2746,8 +2960,13 @@ ${toolHooksCode}
     }
 
     async function triggerDirectToolTest(cap, customValue = null) {
-      const previewWrap = document.getElementById('targetPreviewWrap');
-      const el = previewWrap.querySelector(cap.selector);
+      const previewWrap = getAuthorizedVoltEdgeRootForSimulation();
+      if (!previewWrap) {
+        appendChatMessage('sandboxChatLog', 'Runtime Security Boundary', 'Direct tools are disabled for imported HTML. Select the authorized VoltEdge template to execute the trusted demonstration.', 'agent');
+        return;
+      }
+      let el = null;
+      try { el = previewWrap.querySelector(cap.selector); } catch (error) {}
       const reqId = 'req_af_' + Math.floor(10000 + Math.random() * 89999);
       appendChatMessage('sandboxChatLog', 'User → Target Network', `Invoke site action <code>${cap.toolName}</code>${customValue ? ' with arg <code>"' + customValue + '"</code>' : ''} on <code>${cap.selector}</code>`, 'user');
 
@@ -2814,7 +3033,11 @@ ${toolHooksCode}
 
     async function runTargetSandboxSimulation(promptText) {
       appendChatMessage('sandboxChatLog', 'Developer / Judge', promptText, 'user');
-      const previewWrap = document.getElementById('targetPreviewWrap');
+      const previewWrap = getAuthorizedVoltEdgeRootForSimulation();
+      if (!previewWrap) {
+        appendChatMessage('sandboxChatLog', 'Runtime Security Boundary', 'The imported preview has no access to privileged site actions, BYOK state, or the declarative registry. Select VoltEdge for the authorized runtime demonstration.', 'agent');
+        return;
+      }
       const lower = promptText.toLowerCase();
 
       appendChatMessage(
@@ -3014,56 +3237,68 @@ ${toolHooksCode}
       switchP4Tab('chat');
       pulseStudioAgentCard('p4CardArch', 'ROUTING...');
       const hasKey = Boolean(AppState.llmConfig.apiKey);
+      const inference = window.AgenticForgeDeclarativeRuntime?.inference;
       appendChatMessage(
         'studioChatLog',
         'Architect_Coordinator → Pluggable Inference Engine (Tenet 3)',
-        `Testing active router profile: <code>${AppState.llmConfig.provider}</code> | Model: <code>${AppState.llmConfig.model}</code> | Route: <code>${AppState.llmConfig.endpoint}</code>...`,
+        `Preparing an explicit diagnostic for provider <code>${AppState.llmConfig.provider}</code> and model <code>${AppState.llmConfig.model}</code>.`,
         'tool'
       );
 
-      if (hasKey && AppState.llmConfig.endpoint.startsWith('https://')) {
-        try {
-          const res = await fetch(AppState.llmConfig.endpoint, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${AppState.llmConfig.apiKey}`
-            },
-            body: JSON.stringify({
-              model: AppState.llmConfig.model,
-              messages: [{ role: 'user', content: 'Reply with OK if reachable.' }],
-              max_tokens: 12
-            })
-          });
-          appendChatMessage(
-            'studioChatLog',
-            'Pluggable Inference Router (Live BYOK)',
-            `✔ Live CORS response HTTP ${res.status}. BYOK credential remained strictly in caller browser and was never attached to peer requests.`,
-            'agent'
-          );
-          pulseStudioAgentCard('p4CardArch', 'BYOK LIVE');
-          return;
-        } catch (err) {
-          appendChatMessage(
-            'studioChatLog',
-            'Pluggable Inference Router (Fallback Active)',
-            `ℹ️ Live CORS fetch returned (${err.message}). Automatic fallback to built-in deterministic studio runtime active so all tools and checks run uninterrupted.`,
-            'agent'
-          );
-          pulseStudioAgentCard('p4CardArch', 'FALLBACK OK');
-          return;
-        }
+      if (!inference || !AppState.llmConfig.endpoint || !AppState.llmConfig.model) {
+        appendChatMessage(
+          'studioChatLog',
+          'Inference Adapter',
+          'Configuration required: provide an explicit HTTPS Chat Completions endpoint and model. No operational Otari endpoint is assumed by AgenticForge.',
+          'agent'
+        );
+        pulseStudioAgentCard('p4CardArch', 'CONFIG REQUIRED');
+        return;
       }
 
-      appendChatMessage(
-        'studioChatLog',
-        'Pluggable Inference Diagnostics (Tenet 3 Verified)',
-        `✔ <strong>Zero-Key Deterministic Engine + BYOK Profile Ready:</strong><br>
-        • <strong>Model Policy:</strong> <code>${AppState.llmConfig.model}</code> verified compatible with Neuro SAN tool-calling schemas.<br>
-        • <strong>Credential Custody (Sec 4):</strong> ${hasKey ? 'BYOK Key stored in origin localStorage (isolated from peers).' : 'Running in Zero-Key mode — no external API key required for judges.'}`,
-        'agent'
+      const approved = window.confirm(
+        `Send one non-sensitive diagnostic message to:\n${AppState.llmConfig.endpoint}\n\n`
+        + `Provider: ${AppState.llmConfig.provider}\nModel: ${AppState.llmConfig.model}\n`
+        + `Attach BYOK credential: ${hasKey ? 'yes' : 'no'}\n\n`
+        + 'Tool calls will be parsed as data and will not execute.'
       );
-      pulseStudioAgentCard('p4CardArch', 'READY (front_man)');
+      if (!approved) {
+        appendChatMessage('studioChatLog', 'Inference Adapter', 'Diagnostic cancelled before contacting the configured destination.', 'agent');
+        pulseStudioAgentCard('p4CardArch', 'CONSENT DENIED');
+        return;
+      }
+
+      try {
+        const authorization = inference.authorizeDestination({
+          endpoint: AppState.llmConfig.endpoint,
+          userApproved: true,
+          allowCredentials: hasKey,
+          allowSensitiveContent: false
+        });
+        const result = await inference.infer({
+          config: { ...AppState.llmConfig },
+          authorization,
+          sensitive: false,
+          timeoutMs: 15000,
+          maxTokens: 12,
+          messages: [{ role: 'user', content: 'Reply with exactly OK to confirm this diagnostic request.' }]
+        });
+        appendChatMessage(
+          'studioChatLog',
+          'Pluggable Inference Router',
+          `✔ Normalized response received. Finish reason: <code>${result.finish_reason || 'unspecified'}</code>; tool calls parsed but not executed: <code>${result.tool_calls.length}</code>; textual content present: <code>${result.content ? 'yes' : 'no'}</code>.`,
+          'agent'
+        );
+        pulseStudioAgentCard('p4CardArch', 'INFERENCE OK');
+      } catch (error) {
+        appendChatMessage(
+          'studioChatLog',
+          'Inference Adapter',
+          `✖ Diagnostic failed closed: <code>${error.code || 'UNEXPECTED_INFERENCE_ERROR'}</code> — ${error.message || 'Inference failed.'}`,
+          'agent'
+        );
+        pulseStudioAgentCard('p4CardArch', 'INFERENCE ERROR');
+      }
     }
 
     async function handleStudioAssistantPrompt(userText) {
@@ -3078,15 +3313,15 @@ ${toolHooksCode}
       }
 
       if (lower.includes('mvp') || lower.includes('check') || lower.includes('interoperability') || lower.includes('7')) {
-        pulseStudioAgentCard('p4CardTopo', '7/7 PASS');
+        pulseStudioAgentCard('p4CardTopo', 'PROGRESS');
         appendChatMessage(
           'studioChatLog',
           'Architect_Coordinator → Conformance Verifier (Sec 6)',
-          `<strong>Worldwide Agentic Web MVP Profile 0.2 — 7/7 Checks PASSED:</strong><br>
+          `<strong>Worldwide Agentic Web MVP Profile 0.2 — implementation progress (not a full conformance claim):</strong><br>
           1. ✅ <strong>Two+ Agent HOCON &amp; Manifest:</strong> Published <code>agent-manifest.json</code> + Neuro SAN <code>.network.json</code>.<br>
-          2. ✅ <strong>Default + BYOK Router:</strong> Mozilla Otari (<code>${AppState.llmConfig.model}</code>) + origin-scoped <code>localStorage</code> BYOK.<br>
+          2. ℹ️ <strong>Pluggable Inference Adapter:</strong> OpenAI-compatible transport ready; an explicit authorized endpoint is required for live inference.<br>
           3. ✅ <strong>Grounded Local Site Actions:</strong> ${AppState.extractedCapabilities.length} DOM tools registered with schemas &amp; receipts.<br>
-          4. ✅ <strong>Peer Network Composition:</strong> Linked <code>${AppState.customPeerUrl}</code> via <code>links.json</code> &amp; <code>allowed_peers</code>.<br>
+          4. ⏳ <strong>Peer Network Composition:</strong> Published link metadata exists; real cross-origin peer execution is not implemented yet.<br>
           5. ✅ <strong>Router-Only Disclosure:</strong> BYOK credential never sent to peer origin.<br>
           6. ✅ <strong>Private Context (sly_data):</strong> Deny-by-default enforced across peer boundary.<br>
           7. ✅ <strong>Fail-Closed &amp; Bounded Execution:</strong> Depth≤3, Calls≤8, and user-denied writes halt cleanly.`,
@@ -3181,7 +3416,7 @@ echo "All 6 MVP Profile 0.2 files created successfully!"`;
         payload: {
           request_id: reqId,
           bundleName: `${templateMeta.domain}_mvp02_bundle.zip`,
-          files: ['index.html', 'agent-manifest.json', `${templateMeta.domain}.network.json`, 'devstudio_assistant.network.json', 'links.json', 'discovered-actions.json', 'site.js'],
+          files: ['index.html', 'agent-manifest.json', `${templateMeta.domain}.network.json`, 'devstudio_assistant.network.json', 'links.json', 'discovered-actions.json', 'site.js', 'runtime/declarative-loader.mjs', 'runtime/declarative-executor.mjs', 'runtime/safe-preview.mjs', 'runtime/llm-adapter.mjs', 'runtime/bootstrap.mjs'],
           totalTools: AppState.extractedCapabilities.length
         }
       });
@@ -3213,6 +3448,8 @@ echo "All 6 MVP Profile 0.2 files created successfully!"`;
       document.querySelectorAll('.chip-btn[data-template]').forEach(btn => {
         btn.classList.toggle('active', btn.getAttribute('data-template') === key);
       });
+      AppState.previewTrust = key === 'store' ? 'authorized-voltedge' : 'untrusted-template';
+      if (key === 'store') resetAuthorizedVoltEdgeDemo();
       document.getElementById('rawHtmlInput').value = SAMPLE_TEMPLATES[key].html;
       runFullForgePipeline();
     }
@@ -3246,6 +3483,7 @@ echo "All 6 MVP Profile 0.2 files created successfully!"`;
     document.getElementById('rawHtmlInput').addEventListener('input', () => {
       const badge = document.getElementById('p1ScanStatusBadge');
       badge.textContent = 'Live Parsing...';
+      AppState.previewTrust = 'untrusted-import';
       runFullForgePipeline();
       setTimeout(() => { badge.textContent = 'DOM Grounded'; }, 350);
     });
@@ -3269,6 +3507,7 @@ echo "All 6 MVP Profile 0.2 files created successfully!"`;
         } else {
           rawArea.value += snippet;
         }
+        AppState.previewTrust = 'untrusted-import';
         runFullForgePipeline();
         updateNodeMathInspector(AppState.extractedCapabilities.length - 1);
         appendChatMessage('studioChatLog', 'DOM_Scanner_Agent', `Injected new <code>${type}</code> node into HTML and recomputed capability map (${AppState.extractedCapabilities.length} tools total).`, 'tool');
@@ -3483,16 +3722,16 @@ echo "All 6 MVP Profile 0.2 files created successfully!"`;
       const epInput = document.getElementById('llmEndpointInput');
       const modInput = document.getElementById('llmModelInput');
       if (preset === 'otari') {
-        epInput.value = 'otari-gateway:/api/v1/chat/completions';
+        epInput.value = '';
         modInput.value = 'alibaba/qwen-3.5-35b-a3b';
       } else if (preset === 'otari_local') {
-        epInput.value = 'local-otari-docker:/api/v1/chat/completions';
+        epInput.value = '';
         modInput.value = 'gemma4:e4b';
       } else if (preset === 'openrouter') {
-        epInput.value = 'openrouter-gateway:/api/v1/chat/completions';
+        epInput.value = 'https://openrouter.ai/api/v1/chat/completions';
         modInput.value = 'qwen/qwen-2.5-72b-instruct:free';
       } else {
-        epInput.value = 'browser-deterministic-engine:v0.2';
+        epInput.value = '';
         modInput.value = 'agenticforge-deterministic-v1';
       }
     });
@@ -3510,6 +3749,7 @@ echo "All 6 MVP Profile 0.2 files created successfully!"`;
       AppState.llmConfig.endpoint = document.getElementById('llmEndpointInput').value.trim();
       AppState.llmConfig.model = document.getElementById('llmModelInput').value.trim();
       AppState.llmConfig.apiKey = document.getElementById('llmApiKeyInput').value.trim();
+      AppState.llmConfig.requiresApiKey = AppState.llmConfig.provider === 'openrouter';
       const newTau = parseFloat(document.getElementById('hitlThresholdInput').value);
       if (!isNaN(newTau) && newTau >= 0.15 && newTau <= 0.95) {
         AppState.hitlThreshold = newTau;
@@ -3519,7 +3759,9 @@ echo "All 6 MVP Profile 0.2 files created successfully!"`;
 
       document.getElementById('p4DiagRouter').textContent = AppState.llmConfig.provider;
       document.getElementById('p4DiagModel').textContent = AppState.llmConfig.model;
-      document.getElementById('p4DiagModeBadge').textContent = AppState.llmConfig.apiKey ? 'BYOK Key Active' : 'Zero-Key + BYOK Ready';
+      document.getElementById('p4DiagModeBadge').textContent = AppState.llmConfig.apiKey
+        ? 'BYOK Key Active (Memory Only)'
+        : (AppState.llmConfig.endpoint ? 'Keyless Router Configured' : 'Inference Configuration Required');
 
       try {
         localStorage.setItem('agenticforge_byok_profile', JSON.stringify({
@@ -3532,7 +3774,7 @@ echo "All 6 MVP Profile 0.2 files created successfully!"`;
 
       document.getElementById('llmModeBadge').textContent = AppState.llmConfig.apiKey
         ? `LLM: ${AppState.llmConfig.model} (BYOK Active)`
-        : `Router: ${AppState.llmConfig.model} Ready`;
+        : (AppState.llmConfig.endpoint ? `Router: ${AppState.llmConfig.model} Configured` : 'LLM Router: Configuration Required');
 
       document.getElementById('settingsModalBackdrop').classList.remove('open');
       runFullForgePipeline();
@@ -3543,7 +3785,9 @@ echo "All 6 MVP Profile 0.2 files created successfully!"`;
       document.getElementById('llmApiKeyInput').value = '';
       try { localStorage.removeItem('agenticforge_byok_profile'); } catch (e) {}
       document.getElementById('llmModeBadge').textContent = 'Router: Default Profile (BYOK Deleted)';
-      document.getElementById('p4DiagModeBadge').textContent = 'BYOK Deleted (Zero-Key Active)';
+      document.getElementById('p4DiagModeBadge').textContent = AppState.llmConfig.endpoint
+        ? 'BYOK Deleted (Endpoint Retained)'
+        : 'Inference Configuration Required';
       document.getElementById('settingsModalBackdrop').classList.remove('open');
       appendChatMessage('studioChatLog', 'Architect_Coordinator', 'Deleted stored BYOK profile from origin localStorage per Section 4.', 'tool');
     });
@@ -3577,6 +3821,23 @@ echo "All 6 MVP Profile 0.2 files created successfully!"`;
       const templateMeta = SAMPLE_TEMPLATES[AppState.currentTemplateKey];
       if (window.JSZip) {
         const zip = new JSZip();
+        const runtimeAssetPaths = [
+          './runtime/declarative-loader.mjs',
+          './runtime/declarative-executor.mjs',
+          './runtime/safe-preview.mjs',
+          './runtime/llm-adapter.mjs',
+          './runtime/bootstrap.mjs'
+        ];
+        const runtimeAssetSources = await Promise.all(runtimeAssetPaths.map(async path => {
+          const response = await fetch(path, {
+            method: 'GET',
+            credentials: 'omit',
+            cache: 'no-store',
+            referrerPolicy: 'no-referrer'
+          });
+          if (!response.ok) throw new Error(`Unable to include ${path} in export (HTTP ${response.status}).`);
+          return response.text();
+        }));
         zip.file('index.html', '<!doctype html>\n' + document.documentElement.outerHTML);
         zip.file('agent-manifest.json', JSON.stringify(AppState.generatedManifestObj, null, 2));
         zip.file(`${templateMeta.domain}.network.json`, JSON.stringify(AppState.generatedNetworkObj, null, 2));
@@ -3584,6 +3845,11 @@ echo "All 6 MVP Profile 0.2 files created successfully!"`;
         zip.file('discovered-actions.json', JSON.stringify(AppState.generatedDiscoveredObj, null, 2));
         zip.file('site.js', AppState.generatedSiteJsCode);
         zip.file('devstudio_assistant.network.json', JSON.stringify(STUDIO_OWN_NETWORK_JSON, null, 2));
+        zip.file('runtime/declarative-loader.mjs', runtimeAssetSources[0]);
+        zip.file('runtime/declarative-executor.mjs', runtimeAssetSources[1]);
+        zip.file('runtime/safe-preview.mjs', runtimeAssetSources[2]);
+        zip.file('runtime/llm-adapter.mjs', runtimeAssetSources[3]);
+        zip.file('runtime/bootstrap.mjs', runtimeAssetSources[4]);
         const blob = await zip.generateAsync({ type: 'blob' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -3607,7 +3873,7 @@ echo "All 6 MVP Profile 0.2 files created successfully!"`;
       appendChatMessage(
         'studioChatLog',
         'Architect_Coordinator (front_man)',
-        'Application card restored! Click the <strong>Download</strong> icon on the Canvas panel header (or <strong>📋 Copy Full index.html</strong> / <strong>📦 Export All 7 Files</strong> in the top bar) to save your files.',
+        'Application card restored! Click the <strong>Download</strong> icon on the Canvas panel header (or <strong>📋 Copy Full index.html</strong> / <strong>📦 Export All 12 Files</strong> in the top bar) to save your files.',
         'agent'
       );
     });

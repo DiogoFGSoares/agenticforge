@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>AgenticForge safe preview browser test</title>
+</head>
+<body>
+  <iframe id="app" src="/index.html"></iframe>
+  <div id="result" data-result="pending"></div>
+  <script type="module">
+    const resultElement = document.getElementById('result');
+    const appFrame = document.getElementById('app');
+
+    function wait(milliseconds) {
+      return new Promise(resolve => setTimeout(resolve, milliseconds));
+    }
+
+    function publish(value) {
+      resultElement.dataset.result = btoa(unescape(encodeURIComponent(JSON.stringify(value))));
+    }
+
+    try {
+      await new Promise((resolve, reject) => {
+        appFrame.addEventListener('load', resolve, { once: true });
+        setTimeout(() => reject(new Error('AgenticForge app load timed out.')), 8000);
+      });
+      const appWindow = appFrame.contentWindow;
+      const appDocument = appFrame.contentDocument;
+      await appWindow.AgenticForgeDeclarativeRuntime.ready;
+
+      appDocument.getElementById('llmApiKeyInput').value = 'TEST_ONLY_BYOK_SECRET';
+      appDocument.getElementById('saveSettingsBtn').click();
+      const storedProfile = appWindow.localStorage.getItem('agenticforge_byok_profile') || '';
+      const serializedApplication = appDocument.documentElement.outerHTML;
+      appWindow.__previewScriptExecuted = false;
+      appWindow.__previewEventExecuted = false;
+      appWindow.__previewJavascriptExecuted = false;
+      appWindow.__previewSvgExecuted = false;
+      appWindow.__previewParentAccess = false;
+      appWindow.__previewByokLeak = null;
+
+      const payload = `
+        <div id="benignContainer">
+          <label for="safeInput">Benign field</label>
+          <input id="safeInput" name="safeInput" value="still-discoverable" autofocus
+            onfocus="parent.__previewEventExecuted = true">
+          <button id="safeButton" onclick="parent.__previewEventExecuted = true">Benign button</button>
+        </div>
+        <script>
+          parent.__previewScriptExecuted = true;
+          parent.__previewParentAccess = true;
+          parent.__previewByokLeak = parent.document.getElementById('llmApiKeyInput').value;
+          parent.AgenticForgeDeclarativeRuntime.compromised = true;
+          fetch('/leak?source=script');
+        <\/script>
+        <img src="/leak?source=image" onerror="parent.__previewEventExecuted = true">
+        <a id="javascriptLink" href="javascript:parent.__previewJavascriptExecuted=true">active link</a>
+        <svg onload="parent.__previewSvgExecuted=true">
+          <script>parent.__previewSvgExecuted=true<\/script>
+          <image href="/leak?source=svg"></image>
+        </svg>
+        <iframe src="/leak?source=iframe"></iframe>
+        <object data="/leak?source=object"></object>
+        <meta http-equiv="refresh" content="0;url=/leak?source=refresh">
+        <noscript><img src="/leak?source=noscript"></noscript>
+        <div style="background-image:url('/leak?source=css')">styled</div>
+      `;
+
+      const editor = appDocument.getElementById('rawHtmlInput');
+      editor.value = payload;
+      editor.dispatchEvent(new appWindow.Event('input', { bubbles: true }));
+      await wait(300);
+
+      const maliciousFrame = appDocument.getElementById('untrustedPreviewFrame');
+      const maliciousSrcdoc = maliciousFrame.srcdoc;
+      const discoveredMaliciousCount = Number(appDocument.getElementById('p1TotalToolsVal').textContent);
+      const runtimeWasModified = appWindow.AgenticForgeDeclarativeRuntime.compromised === true;
+
+      editor.value = '<div><label for="benignInput">Name</label><input id="benignInput"><button id="benignButton">Continue</button></div>';
+      editor.dispatchEvent(new appWindow.Event('input', { bubbles: true }));
+      await wait(200);
+      const replacementFrame = appDocument.getElementById('untrustedPreviewFrame');
+      const discoveredBenignCount = Number(appDocument.getElementById('p1TotalToolsVal').textContent);
+
+      const direct = await appWindow.AgenticForgeDeclarativeRuntime.diagnostics.getPageState();
+      const delegated = await appWindow.AgenticForgeDeclarativeRuntime.diagnostics.getPageStateViaStateForm();
+      const authorizedRoot = appDocument.querySelector('#authorizedVoltEdgeHost > #techStoreRoot');
+      const inference = appWindow.AgenticForgeDeclarativeRuntime.inference;
+      const mockEndpoint = `${location.origin}/mock/v1/chat/completions`;
+      const executorTraceBeforeInference = appWindow.AgenticForgeDeclarativeRuntime.executor.getTrace().length;
+      const inferenceAuthorization = inference.authorizeDestination({
+        endpoint: mockEndpoint,
+        userApproved: true,
+        allowCredentials: true,
+        allowSensitiveContent: false
+      });
+      const inferenceResult = await inference.infer({
+        config: {
+          provider: 'local-browser-mock',
+          endpoint: mockEndpoint,
+          model: 'mock-browser-model',
+          apiKey: 'TEST_BROWSER_LLM_KEY'
+        },
+        messages: [{ role: 'user', content: 'TEST_BROWSER_PRIVATE_PROMPT' }],
+        authorization: inferenceAuthorization,
+        timeoutMs: 2000
+      });
+      const inferenceTraceText = JSON.stringify(inference.getTrace());
+
+      publish({
+        benignDiscoveryWorks: discoveredBenignCount === 2,
+        maliciousDiscoveryWorks: discoveredMaliciousCount === 2,
+        inlineHandlerBlocked: appWindow.__previewEventExecuted === false,
+        embeddedScriptBlocked: appWindow.__previewScriptExecuted === false,
+        javascriptUrlBlocked: appWindow.__previewJavascriptExecuted === false && !maliciousSrcdoc.includes('javascript:'),
+        activeSvgBlocked: appWindow.__previewSvgExecuted === false && !maliciousSrcdoc.includes('<svg'),
+        parentAccessBlocked: appWindow.__previewParentAccess === false,
+        byokBlocked: appWindow.__previewByokLeak === null,
+        byokNotPersisted: !storedProfile.includes('TEST_ONLY_BYOK_SECRET'),
+        byokNotExported: !serializedApplication.includes('TEST_ONLY_BYOK_SECRET'),
+        runtimeProtected: runtimeWasModified === false,
+        activeUrlsRemoved: !maliciousSrcdoc.includes('/leak?'),
+        sandboxHasNoScripts: maliciousFrame.getAttribute('sandbox') === '',
+        sandboxHasOpaqueOrigin: !maliciousFrame.getAttribute('sandbox').includes('allow-same-origin'),
+        oldFrameDetached: maliciousFrame !== replacementFrame && maliciousFrame.isConnected === false,
+        authorizedRootPreserved: authorizedRoot?.isConnected === true && authorizedRoot.parentElement.id === 'authorizedVoltEdgeHost',
+        getPageStateWorks: direct.output.source === 'authorized-volt-edge-dom',
+        delegationWorks: delegated.agentChain.join('>') === 'FrontDesk_Coordinator>State_Form_Specialist'
+          && delegated.toolResult.output.source === 'authorized-volt-edge-dom',
+        llmMockToolCallParsed: inferenceResult.tool_calls[0]?.function.name === 'getPageState',
+        llmMockToolCallNotExecuted: appWindow.AgenticForgeDeclarativeRuntime.executor.getTrace().length === executorTraceBeforeInference,
+        llmTraceRedacted: !inferenceTraceText.includes('TEST_BROWSER_LLM_KEY')
+          && !inferenceTraceText.includes('TEST_BROWSER_PRIVATE_PROMPT')
+          && !inferenceTraceText.includes('TEST_BROWSER_PRIVATE_RESPONSE')
+      });
+    } catch (error) {
+      publish({ error: error.message, stack: error.stack });
+    }
+  </script>
+</body>
+</html>

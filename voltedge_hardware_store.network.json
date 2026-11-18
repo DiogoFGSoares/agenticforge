@@ -25,23 +25,48 @@
     {
       "name": "FrontDesk_Coordinator",
       "function": {
-        "description": "Public Front Man entry point for VoltEdge Tech Store. Grounds user requests against live DOM state and delegates to internal specialists or approved peer networks."
+        "description": "Public Front Man entry point for VoltEdge Tech Store. Grounds user requests against live DOM state and delegates to internal specialists or approved peer networks.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "inquiry": {
+              "type": "string",
+              "description": "User request for the VoltEdge Tech Store."
+            }
+          },
+          "required": [
+            "inquiry"
+          ]
+        }
       },
-      "instructions": "Always call getPageState first. Delegate non-destructive form updates (R < 0.65) to State_Form_Specialist, high-risk writes (R >= 0.65) to Critical_Action_Specialist, and cross-site inquiries to security_triage_peer.",
+      "instructions": "Always call getPageState first. Delegate non-destructive form updates (R < 0.65) to State_Form_Specialist, high-risk writes (R >= 0.65) to Critical_Action_Specialist, and cross-site inquiries to worldwide_agentic_web_peer.",
       "tools": [
         "State_Form_Specialist",
         "Critical_Action_Specialist",
         "getPageState",
-        "security_triage_peer"
+        "worldwide_agentic_web_peer"
       ]
     },
     {
       "name": "State_Form_Specialist",
       "function": {
-        "description": "Executes safe, reversible DOM form updates and queries."
+        "description": "Executes safe, reversible DOM form updates and queries.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "inquiry": {
+              "type": "string",
+              "description": "Safe site action request."
+            }
+          },
+          "required": [
+            "inquiry"
+          ]
+        }
       },
       "instructions": "Operate only on registered site actions whose Mutation Risk Score R(e_i) is below tau_HITL (0.65).",
       "tools": [
+        "getPageState",
         "set_product_select",
         "set_quantity_input",
         "set_promo_code_input",
@@ -51,7 +76,19 @@
     {
       "name": "Critical_Action_Specialist",
       "function": {
-        "description": "Proposes irreversible or high-risk DOM mutations that require user-owned runtime confirmation."
+        "description": "Proposes irreversible or high-risk DOM mutations that require user-owned runtime confirmation.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "inquiry": {
+              "type": "string",
+              "description": "High-risk site action request."
+            }
+          },
+          "required": [
+            "inquiry"
+          ]
+        }
       },
       "instructions": "Propose validated action arguments and wait for the browser runtime to obtain explicit human approval and issue a signed action receipt.",
       "tools": [

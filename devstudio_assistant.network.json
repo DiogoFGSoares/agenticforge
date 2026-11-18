@@ -20,7 +20,17 @@
     {
       "name": "Architect_Coordinator",
       "function": {
-        "description": "Front agent for AgenticForge Studio. Understands developer requests and delegates DOM scanning, Neuro SAN topology generation, and safe action wiring."
+        "description": "Front agent for AgenticForge Studio. Understands developer requests and delegates DOM scanning, Neuro SAN topology generation, and safe action wiring.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "inquiry": {
+              "type": "string",
+              "description": "Developer request for the AgenticForge Studio."
+            }
+          },
+          "required": ["inquiry"]
+        }
       },
       "instructions": "Understand the developer's request, inspect the current studio state, and delegate tasks to DOM_Scanner_Agent, Topology_Builder_Agent, or Wiring_Generator_Agent.",
       "tools": [
@@ -34,7 +44,17 @@
     {
       "name": "DOM_Scanner_Agent",
       "function": {
-        "description": "Parses target HTML via DOMParser and computes Actionability A(e_i) and Mutation Risk R(e_i)."
+        "description": "Parses target HTML via DOMParser and computes Actionability A(e_i) and Mutation Risk R(e_i).",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "inquiry": {
+              "type": "string",
+              "description": "DOM inspection request."
+            }
+          },
+          "required": ["inquiry"]
+        }
       },
       "instructions": "Use only grounded DOM inspection results. Flag any element where R(e_i) >= tau_HITL as requiring mandatory user-owned confirmation.",
       "tools": [
@@ -45,7 +65,17 @@
     {
       "name": "Topology_Builder_Agent",
       "function": {
-        "description": "Synthesizes the target site's Neuro SAN .network.json, agent-manifest.json, and links.json artifacts."
+        "description": "Synthesizes the target site's Neuro SAN .network.json, agent-manifest.json, and links.json artifacts.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "inquiry": {
+              "type": "string",
+              "description": "Topology generation request."
+            }
+          },
+          "required": ["inquiry"]
+        }
       },
       "instructions": "Generate valid Neuro SAN HOCON/JSON network definitions with explicit front_man, invocation schemas, and sly_data isolation rules.",
       "tools": [
@@ -56,7 +86,17 @@
     {
       "name": "Wiring_Generator_Agent",
       "function": {
-        "description": "Registers browser-local site actions in site.js and binds write operations to user-owned HITL confirmation receipts."
+        "description": "Registers browser-local site actions in site.js and binds write operations to user-owned HITL confirmation receipts.",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "inquiry": {
+              "type": "string",
+              "description": "Action wiring or export request."
+            }
+          },
+          "required": ["inquiry"]
+        }
       },
       "instructions": "Ensure every write or high-risk DOM mutation is registered with an input schema, effect classification, request identifier, and user confirmation modal.",
       "tools": [
