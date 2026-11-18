@@ -1,0 +1,102 @@
+{
+  "schema_version": "1.0",
+  "source_template": "store",
+  "hitl_threshold": 0.65,
+  "actions": [
+    {
+      "name": "set_product_select",
+      "enabled": true,
+      "selector": "#productSelect",
+      "tag": "select",
+      "effect": "reversible_write",
+      "actionability_score": 0.95,
+      "mutation_risk_score": 0.06,
+      "requires_user_confirmation": false,
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string",
+            "description": "Target value or trigger for Hardware SKU"
+          }
+        }
+      }
+    },
+    {
+      "name": "set_quantity_input",
+      "enabled": true,
+      "selector": "#quantityInput",
+      "tag": "input",
+      "effect": "reversible_write",
+      "actionability_score": 0.95,
+      "mutation_risk_score": 0.06,
+      "requires_user_confirmation": false,
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string",
+            "description": "Target value or trigger for Unit Quantity"
+          }
+        }
+      }
+    },
+    {
+      "name": "set_promo_code_input",
+      "enabled": true,
+      "selector": "#promoCodeInput",
+      "tag": "input",
+      "effect": "reversible_write",
+      "actionability_score": 0.95,
+      "mutation_risk_score": 0.06,
+      "requires_user_confirmation": false,
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string",
+            "description": "Target value or trigger for Discount / Partner Code"
+          }
+        }
+      }
+    },
+    {
+      "name": "exec_recalculate_quote",
+      "enabled": true,
+      "selector": "#recalcCartBtn",
+      "tag": "button",
+      "effect": "read_only",
+      "actionability_score": 0.91,
+      "mutation_risk_score": 0.28,
+      "requires_user_confirmation": false,
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string",
+            "description": "Target value or trigger for Update Cart Quote"
+          }
+        }
+      }
+    },
+    {
+      "name": "exec_submit_purchase_checkout",
+      "enabled": true,
+      "selector": "#checkoutOrderBtn",
+      "tag": "button",
+      "effect": "irreversible_write",
+      "actionability_score": 0.91,
+      "mutation_risk_score": 0.89,
+      "requires_user_confirmation": true,
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string",
+            "description": "Target value or trigger for Authorize & Place Order"
+          }
+        }
+      }
+    }
+  ]
+}

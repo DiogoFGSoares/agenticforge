@@ -1,31 +1,43 @@
 {
-  "network_name": "AgenticForge_Studio_Assistant",
-  "version": "1.0.0",
-  "runtime": "nsdeploy-browser-v1",
-  "llm_config": {
-    "provider": "mozilla-otari",
-    "default_model": "alibaba/qwen-3.5-35b-a3b",
-    "cors_enabled": true,
-    "byok_required": true
+  "metadata": {
+    "network_name": "devstudio_assistant",
+    "description": "AgenticForge Meta-IDE 4-agent network conforming to Cognizant AI Lab Neuro SAN & Worldwide Agentic Web MVP Profile 0.2",
+    "front_man": "Architect_Coordinator",
+    "execution_limits": {
+      "max_composition_depth": 4,
+      "max_agent_invocations": 12,
+      "max_remote_calls": 4,
+      "timeout_ms": 30000
+    },
+    "sly_data_policy": {
+      "default": "deny",
+      "allowed_downstream_fields": [
+        "session_theme",
+        "hitl_threshold"
+      ]
+    }
   },
-  "entry_agent": "Architect_Coordinator",
-  "agents": [
+  "tools": [
     {
       "name": "Architect_Coordinator",
-      "role": "Front-desk orchestrator that guides the developer and routes tasks across the studio.",
+      "function": {
+        "description": "Front agent for AgenticForge Studio. Understands developer requests and delegates DOM scanning, Neuro SAN topology generation, and safe action wiring."
+      },
+      "instructions": "Understand the developer's request, inspect the current studio state, and delegate tasks to DOM_Scanner_Agent, Topology_Builder_Agent, or Wiring_Generator_Agent.",
       "tools": [
-        "get_studio_state",
-        "load_sample_template"
-      ],
-      "downstream_agents": [
         "DOM_Scanner_Agent",
         "Topology_Builder_Agent",
-        "Wiring_Generator_Agent"
+        "Wiring_Generator_Agent",
+        "get_studio_state",
+        "load_sample_template"
       ]
     },
     {
       "name": "DOM_Scanner_Agent",
-      "role": "Analyzes extracted DOM nodes, computes Actionability A(e_i) and Mutation Risk R(e_i), and flags destructive actions.",
+      "function": {
+        "description": "Parses target HTML via DOMParser and computes Actionability A(e_i) and Mutation Risk R(e_i)."
+      },
+      "instructions": "Use only grounded DOM inspection results. Flag any element where R(e_i) >= tau_HITL as requiring mandatory user-owned confirmation.",
       "tools": [
         "scan_target_dom",
         "highlight_dom_capabilities"
@@ -33,7 +45,10 @@
     },
     {
       "name": "Topology_Builder_Agent",
-      "role": "Synthesizes the target site's .network.json specification and maps tools to specialist agents.",
+      "function": {
+        "description": "Synthesizes the target site's Neuro SAN .network.json, agent-manifest.json, and links.json artifacts."
+      },
+      "instructions": "Generate valid Neuro SAN HOCON/JSON network definitions with explicit front_man, invocation schemas, and sly_data isolation rules.",
       "tools": [
         "generate_network_json",
         "render_topology_graph"
@@ -41,7 +56,10 @@
     },
     {
       "name": "Wiring_Generator_Agent",
-      "role": "Generates site.js state-grounding hooks and enforces Human-in-the-Loop interceptors whenever R(e_i) >= tau_HITL.",
+      "function": {
+        "description": "Registers browser-local site actions in site.js and binds write operations to user-owned HITL confirmation receipts."
+      },
+      "instructions": "Ensure every write or high-risk DOM mutation is registered with an input schema, effect classification, request identifier, and user confirmation modal.",
       "tools": [
         "generate_site_js_hooks",
         "export_agentic_bundle"

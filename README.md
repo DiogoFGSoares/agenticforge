@@ -1,36 +1,26 @@
-# 🔨 AgenticForge — Meta-IDE & Scaffolder for the Open Agentic Web
+# 🔨 AgenticForge — Meta-IDE & Scaffolder for the Open Agentic Web (MVP Profile 0.2)
 
-> **Turn any static HTML page into an Open Agentic Website in seconds.** An AI-powered browser IDE that parses the DOM, computes mathematical actionability & risk scores, designs multi-agent `.network.json` topologies, and wires safe JS tools with automatic **Human-in-the-Loop (HITL)** guards.
+> **Turn any static HTML page into a conforming Open Agentic Website in seconds.** A 100% client-side, zero-backend Developer Studio that parses the DOM, computes Actionability $A(e_i)$ and Mutation Risk $R(e_i)$ scores, synthesizes **Cognizant Neuro SAN** `.network.json` + `agent-manifest.json` + `links.json` artifacts, and enforces user-owned **Human-in-the-Loop (HITL)** action receipts.
 
-Built for the **[Open Agentic Web Challenge](https://cognizant-agenticweb.devpost.com/)** following the **[cognizant-ai-labs/agentic-web](https://github.com/cognizant-ai-labs/agentic-web)** specification.
-
----
-
-## ✨ Key Features
-
-1. **🔍 Target DOM Inspector & Heuristic Risk Scorer:** Parses any HTML snippet via `DOMParser` and computes an **Actionability Score** $A(e_i)$ and a **Mutation Risk Score** $R(e_i)$ for every interactive control.
-2. **🕸️ Multi-Agent Blueprinting (`.network.json`):** Synthesizes an `nsdeploy`-compliant multi-agent hierarchy (`FrontDesk_Coordinator`, `State_Form_Specialist`, and `Critical_Action_Specialist`).
-3. **🛡️ Safety by Default (`site.js` + Auto-HITL):** Generates real-time DOM state grounding (`window.getPageState()`) and wraps any tool where $R(e_i) \ge \tau_{\text{HITL}}$ ($0.65$) in a mandatory **Human-in-the-Loop** browser confirmation modal.
-4. **🧪 Live Sandbox Simulator:** Test the newly generated agent network directly against the live target DOM inside the browser before exporting the ready-to-deploy `.zip` bundle.
-5. **🔑 Client-Side BYOK Router:** Pre-configured for **Mozilla Otari** (`alibaba/qwen-3.5-35b-a3b`) and OpenAI-compatible CORS endpoints with zero backend servers.
+Built for the **Open Agentic Web Challenge** conforming to the **Minimum Viable Specification for a Worldwide Agentic Web (MVP Profile 0.2 — Cognizant AI Lab)**.
 
 ---
 
-## 🚀 Quick Start (Local Run)
+## ✅ 7/7 MVP Profile 0.2 Interoperability Checks Verified
 
-No build step or backend server required! Clone this repository and serve the directory with any static HTTP server:
+1. **Two+ Agent HOCON & Manifest (Section 2 & 3.3):** Publishes `agent-manifest.json` and resolved Neuro SAN `.network.json` graphs (`front_man`, `metadata`, `tools[]`).
+2. **Pluggable Inference & BYOK (Section 4):** Pre-configured for **Mozilla Otari** (`alibaba/qwen-3.5-35b-a3b` on `/api/v1`), OpenAI-compatible BYOK in origin-scoped `localStorage`, and a built-in zero-key deterministic engine.
+3. **Grounded Local Site Actions (Section 1.2 & 3.1):** Registers DOM capabilities in `site.js` (`window.RegisteredSiteActions`) and `discovered-actions.json`.
+4. **Peer Network Composition (Section 3.2):** Resolves symbolic peer links via `links.json` and requests explicit user approval via the **Peer Origin Consent** modal.
+5. **Router-Only Disclosure (Section 4):** Caller's BYOK key is never transmitted to peer origins.
+6. **Private Context Isolation (`sly_data` — Section 5):** Enforces `deny-by-default` across peer boundaries (`credit_card_token` and `auth_cookie` redacted).
+7. **Fail-Closed & Bounded Execution (Section 3.1, 5 & 6):** Interactive drills verify clean halts on Malformed Networks, Composition Cycles, Over-Budget Calls (`> 8`), and Unapproved Origins.
+
+---
+
+## 🚀 Quick Local Run
 
 ```bash
 python3 -m http.server 8080
+# Open http://localhost:8080 in your browser
 ```
-
-Then open `http://localhost:8080` in your browser.
-
----
-
-## 📂 Repository Structure
-
-* `index.html` — Complete **AgenticForge Studio** 4-panel IDE (100% client-side HTML5/CSS3/ES6+).
-* `devstudio_assistant.network.json` — AgenticForge's own 4-agent network specification (`Architect_Coordinator`, `DOM_Scanner_Agent`, `Topology_Builder_Agent`, `Wiring_Generator_Agent`).
-* `target_assistant.network.json` — Sample generated multi-agent network specification for the Medical Clinic template.
-* `site.js` — Sample generated state-grounding hooks (`getPageState()`) and Human-in-the-Loop tool wrappers.
